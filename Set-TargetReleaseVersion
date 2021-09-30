@@ -1,0 +1,36 @@
+Import-Module $env:SyncroModule
+
+$keyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
+$dwordName = 'TargetReleaseVersion'
+$stringName = 'TargetReleaseVersionInfo'
+$stringValue = $ApprovedVersion
+$dwordValue = 1
+
+$OScheck = (Get-CimInstance Win32_OperatingSystem).Caption
+if($OSCheck -match "Server"){
+    Write-Host "Machine running a server version; exiting"
+    exit;
+}
+
+$CurrentValue = (Get-ItemProperty -Path $keyPath).$stringName
+
+if($CurrentValue -eq $ApprovedVersion){
+    Write-Host "Target Release Version already set to $CurrentValue; exiting"
+    exit;
+}
+
+if($CurrentValue -ne $ApprovedVersion){
+    Write-Host "Changing Target Release Version from $CurrentValue to $ApprovedVersion"
+    Set-ItemProperty -Path $keyPath -Name $stringName -Value $stringValue
+}
+
+if(!($CurrentValue)){
+New-ItemProperty -Path $keyPath -PropertyType 'DWord' -Name $dwordName -Value $dwordValue -Force
+New-ItemProperty -Path $keyPath -PropertyType 'String' -Name $stringName -Value $stringValue -Force
+}
+
+
+$CurrentValue = (Get-ItemProperty -Path $keyPath).$stringName
+Write-Host "Target Release Version: $CurrentValue"
+
+Log-Activity -Message "Set Target Release Version to $CurrentValue" -EventName "SkyCamp-Mgmt"
