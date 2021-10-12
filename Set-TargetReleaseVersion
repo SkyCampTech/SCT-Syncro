@@ -1,36 +1,43 @@
 Import-Module $env:SyncroModule
 
-$keyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
-$dwordName = 'TargetReleaseVersion'
-$stringName = 'TargetReleaseVersionInfo'
-$stringValue = $ApprovedVersion
-$dwordValue = 1
-
 $OScheck = (Get-CimInstance Win32_OperatingSystem).Caption
-if($OSCheck -match "Server"){
+if ($OSCheck -match "Server") {
     Write-Host "Machine running a server version; exiting"
     exit;
 }
 
-$CurrentValue = (Get-ItemProperty -Path $keyPath).$stringName
+$keyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
 
-if($CurrentValue -eq $ApprovedVersion){
-    Write-Host "Target Release Version already set to $CurrentValue; exiting"
-    exit;
+#check if WindowsUpdate key exists and create it if not
+
+if (!(Test-Path -Path $keyPath)) {
+    Write-Host "$keyPath didn't exist. Creating"
+    New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows' -Name 'WindowsUpdate'
+    
+    #enables the 'TargetReleaseVersion' setting
+    New-ItemProperty -Path $keyPath -Name "TargetReleaseVersion" -PropertyType DWORD -Value 1
+
+    #sets the Windows OS Version to what was defined at input. This will be Windows 10, Windows 11, etc
+    New-ItemProperty -Path $keyPath -Name "ProductVersion" -Value $ApprovedOS
+
+    #sets the Release Version to what was defined at input. This will be 20H2, 21H1, etc
+    New-ItemProperty -Path $keyPath -Name "TargetReleaseVersionInfo" -Value $ApprovedVersion
+
+    $CurrentApprovedOS = (Get-ItemProperty -Path $keyPath).ProductVersion
+    $CurrentApprovedVersion = (Get-ItemProperty -Path $keyPath).TargetReleaseVersionInfo
+
+    Log-Activity -Message "Set highest approved OS/Version to $CurrentApprovedOS $CurrentApprovedVersion"
+   
 }
 
-if($CurrentValue -ne $ApprovedVersion){
-    Write-Host "Changing Target Release Version from $CurrentValue to $ApprovedVersion"
-    Set-ItemProperty -Path $keyPath -Name $stringName -Value $stringValue
+else {
+    Write-Host "$keyPath exists; Let's set the targets we want"
+    Set-ItemProperty -Path $keyPath -Name "TargetReleaseVersion" -PropertyType DWORD -Value 1 -Force
+    Set-ItemProperty -Path $keyPath -Name "ProductVersion" -Value $ApprovedOS -Force
+    Set-ItemProperty -Path $keyPath -Name "TargetReleaseVersionInfo" -Value $ApprovedVersion -Force
+
+    $CurrentApprovedOS = (Get-ItemProperty -Path $keyPath).ProductVersion
+    $CurrentApprovedVersion = (Get-ItemProperty -Path $keyPath).TargetReleaseVersionInfo
+
+    Log-Activity -Message "Set highest approved OS/Version to $CurrentApprovedOS $CurrentApprovedVersion"
 }
-
-if(!($CurrentValue)){
-New-ItemProperty -Path $keyPath -PropertyType 'DWord' -Name $dwordName -Value $dwordValue -Force
-New-ItemProperty -Path $keyPath -PropertyType 'String' -Name $stringName -Value $stringValue -Force
-}
-
-
-$CurrentValue = (Get-ItemProperty -Path $keyPath).$stringName
-Write-Host "Target Release Version: $CurrentValue"
-
-Log-Activity -Message "Set Target Release Version to $CurrentValue" -EventName "SkyCamp-Mgmt"
