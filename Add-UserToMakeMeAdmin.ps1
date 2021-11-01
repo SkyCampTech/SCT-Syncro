@@ -1,4 +1,4 @@
-#checks to see if Make Me Admin is installed. then adds a specific user to the registry file
+#checks to see if Make Me Admin is installed. then adds the current user to the "Allowed Entities" registry entry (users allowed to request admin on that machine)
 #https://github.com/pseymour/MakeMeAdmin/wiki/
 #use's the current user; optionally pass a timeout value if you want it different than 15 mins
 
