@@ -11,6 +11,7 @@ if ($enteredConfPwd -match $confPwd) {
     Write-Host "Confirmation matches; removing TPM key protector from $env:COMPUTERNAME"
     $TpmKeyProtector = ((Get-BitLockerVolume -MountPoint C:).KeyProtector | Where-Object { $_.KeyProtectorType -eq "Tpm" }).KeyProtectorId
     Remove-BitLockerKeyProtector -MountPoint C: -KeyProtectorId $TpmKeyProtector
+    Log-Activity -Message "Remove TPM Key Protector and Restarted Computer"- EventName "SkyCamp-Mgmt"
     Restart-Computer -Force
 }
 else {
