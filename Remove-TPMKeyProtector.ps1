@@ -15,4 +15,6 @@ if ($enteredConfPwd -match $confPwd) {
 }
 else {
     Rmm-Alert -Category "Security" -Body "Incorrect confirmation entered to remove the Bitlocker Key Protector. You entered $enteredConfPwd. Run again and enter $confPwd"
+    Write-Host "Confirmation did not match; exiting"
+    Exit 1;
 }
