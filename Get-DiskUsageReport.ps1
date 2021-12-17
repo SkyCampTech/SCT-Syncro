@@ -8,6 +8,7 @@
 TODO:
 -scan c:\temp for wiztree PNG files and delete before starting
 -cleanup wiztree3 config file after completion
+-update the $outfile check to see if wiztree process is running. if so, sleep a little longer
 #>
 
 Import-Module $env:SyncroModule
@@ -19,6 +20,7 @@ function New-WiztreeScan {
         [Parameter(Mandatory)]
         [string]$scanPath
     )
+
     Write-Host "Scanning $scanPath with WizTree"
     $outFile = "c:\temp\wiztree-scan_%d%t.png"
     $scanArgs = @"
@@ -28,19 +30,31 @@ function New-WiztreeScan {
     Write-Host "$scanArgs"
     #Scan the path received
     Start-Process -FilePath $wiztreePath -ArgumentList $scanArgs
+    
+    #sleep for 30 seonds while the scan runs
+    Start-Sleep -Seconds 30
 
-    $imageFile = (Get-ChildItem -Path "c:\temp\" | Where-Object { $_.Name -like "wiztree-scan*" }).Name
-    Write-Host "Image File: $imageFile"
-    $imagePath = Join-Path -Path "c:\temp" -ChildPath $imageFile
-    Write-Host "Image Path: $imagePath"
+    $outFile = (Get-ChildItem -Path 'C:\temp' | Where-Object { $_.Name -like "wiztree-scan*" }).FullName
+
+    if (!($outFile)) {
+        #scan may still be running; sleep for another 30 secods
+        Start-Sleep -Seconds 30
+    }
+
+    $outFile = (Get-ChildItem -Path 'C:\temp' | Where-Object { $_.Name -like "wiztree-scan*" }).FullName
+
+    if (!($outFile)) {
+        Write-Host "FIle not found; exiting"
+        exit 1;
+    }
 
     #upload the file to the syncro Asset
-    Write-Host "Uploading $imagePath to Syncro Asset"
-    Upload-File -FilePath $imagePath
+    Write-Host "Uploading $outFile to Syncro Asset"
+    Upload-File -FilePath $outFile
 
     #delete the file
-    Write-Host "Deleting $imagePath"
-    Remove-Item -Path $imagePath
+    Write-Host "Deleting $outFile"
+    Remove-Item -Path $outFile
 }
 
 if ($scanRoot -contains "yes") {
