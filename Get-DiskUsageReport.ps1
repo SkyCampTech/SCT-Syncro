@@ -6,20 +6,25 @@
 
 <#
 TODO:
--scan c:\temp for wiztree PNG files and delete before starting
--cleanup wiztree3 config file after completion
 -update the $outfile check to see if wiztree process is running. if so, sleep a little longer
 #>
 
 Import-Module $env:SyncroModule
 
 $wiztreePath = 'C:\temp\WizTree64.exe'
-
+$wiztreeINI = 'C:\temp\WizTree3.ini'
 function New-WiztreeScan {
     param (
         [Parameter(Mandatory)]
         [string]$scanPath
     )
+
+    #check for existing wiztree scan PNGs and delete them
+    $existingPNGs = (Get-ChildItem -Path 'C:\temp' | Where-Object { $_.Name -like "wiztree-scan*" }).FullName
+    foreach ($item in $existingPNGs) {
+        Remove-Item -Path $item -Force
+    }
+
 
     Write-Host "Scanning $scanPath with WizTree"
     $outFile = "c:\temp\wiztree-scan_%d%t.png"
@@ -72,4 +77,5 @@ if ($scanCustomFolder) {
 }
 
 #remove WizTree now that we're done
-#Remove-Item $wiztreePath -Force
+Remove-Item $wiztreePath -Force
+Remove-Item $wiztreeINI -Force
