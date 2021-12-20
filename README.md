@@ -17,7 +17,7 @@ Log-Activity -Message "Activity description" -EventName "Event name"
 Get-ScreenCapture -FullFileName "C:\temp\screenshot.jpg"
 
 # This will send you an email, no SMTP server required.
-Send-Email -To "craig@skycamptech.com" -Subject "Test Subject" -Body "This is the body"
+Send-Email -To "email" -Subject "Test Subject" -Body "This is the body"
 
 # This will upload the file to Syncro and attach it to the Asset.
 Upload-File -FilePath "C:\temp\screenshot.jpg"
