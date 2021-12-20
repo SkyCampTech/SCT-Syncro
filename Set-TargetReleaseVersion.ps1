@@ -32,7 +32,7 @@ if (!(Test-Path -Path $keyPath)) {
 
 else {
     Write-Host "$keyPath exists; Let's set the targets we want"
-    Set-ItemProperty -Path $keyPath -Name "TargetReleaseVersion" -PropertyType DWORD -Value 1 -Force
+    Set-ItemProperty -Path $keyPath -Name "TargetReleaseVersion" -Value 1 -Force
     Set-ItemProperty -Path $keyPath -Name "ProductVersion" -Value $ApprovedOS -Force
     Set-ItemProperty -Path $keyPath -Name "TargetReleaseVersionInfo" -Value $ApprovedVersion -Force
 
