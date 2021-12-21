@@ -1,6 +1,6 @@
 #checks to see if Make Me Admin is installed. then adds the current user to the "Allowed Entities" registry entry (users allowed to request admin on that machine)
 #https://github.com/pseymour/MakeMeAdmin/wiki/
-#use's the current user; optionally pass a timeout value if you want it different than 15 mins
+#uses the current user; optionally pass a timeout value if you want it different than 15 mins
 
 Import-Module $env:SyncroModule
 
