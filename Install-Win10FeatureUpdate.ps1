@@ -1,5 +1,10 @@
 #credit to drhodes: https://community.syncromsp.com/t/script-to-update-windows-to-version-20h2/127/8
 
+<#
+TODO:
+-build out Toast notification to display notice to user
+#>
+
 # Set Variables:
 $targetVersion = "10.0.19044"   #Windows 10 21h2
 $minimumSpace = 10          # Minimum drive space in GB
@@ -116,7 +121,7 @@ function Get-UpdateAssistant($URL, $path, $log, $file) {
 function Show-Message($title, $message) {
     if ($enabled -eq $true) {
         $scriptblock = {
-            Display-Alert -Message "$title `n $message"
+            #Display-Alert -Message "$title `n $message"
         } 
         Invoke-AsCurrentUser -ScriptBlock $scriptblock
     }
