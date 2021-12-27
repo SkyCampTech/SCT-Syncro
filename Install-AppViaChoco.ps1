@@ -5,8 +5,8 @@
 
 Import-Module $env:SyncroModule
 
-#using Kabuto Patch Manager since it's chocolatey anyway and already installed with all Syncro deployments
-$choco = 'C:\Program Files\RepairTech\Syncro\kabuto_app_manager\kabuto_patch_manager.exe'
+#using choco.exe in the syncro folder in case choco alias doesn't exist yet
+$choco = 'C:\Program Files\RepairTech\Syncro\kabuto_app_manager\choco.exe'
 
 if ($dropdownApp) {
     Start-Process $choco -ArgumentList "install $dropdownApp -y" -Wait
