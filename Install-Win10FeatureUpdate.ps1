@@ -1,3 +1,4 @@
+Import-Module $env:SyncroModule
 #credit to drhodes: https://community.syncromsp.com/t/script-to-update-windows-to-version-20h2/127/8
 
 <#
@@ -40,6 +41,7 @@ function Get-RunAsUserStatus {
     #check for RunAsUser module
     $runAsUser = Get-InstalledModule -Name "RunAsUser"
     if (!($runAsUser)) {
+        Write-Host "Installing RunAsUserModule"
         Install-Module -Name "RunAsUser" -Force
         Start-Sleep -Seconds 60
     }
