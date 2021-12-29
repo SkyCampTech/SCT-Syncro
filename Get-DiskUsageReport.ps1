@@ -11,6 +11,15 @@ TODO:
 
 Import-Module $env:SyncroModule
 
+#determine if user is logged in
+$currentUser = (Get-WMIObject -ClassName Win32_ComputerSystem).Username
+if (!($currentUser)) {
+    Write-Host "No user logged in; scan root folder instead"
+    $scanRoot = "yes"
+    $scanUserFolder = "no"
+}
+
+
 $wiztreePath = 'C:\temp\WizTree64.exe'
 $wiztreeINI = 'C:\temp\WizTree3.ini'
 function New-WiztreeScan {
@@ -62,14 +71,14 @@ function New-WiztreeScan {
     Remove-Item -Path $outFile
 }
 
-if ($scanRoot -contains "yes") {
-    New-WiztreeScan -scanPath "$env:SystemDrive"
-}
-
 if ($scanUserFolder -contains "yes") {
-    $currentUser = (Get-WMIObject -ClassName Win32_ComputerSystem).Username
     $userFolder = Join-Path -Path "C:\Users\" -ChildPath $currentUser.Split("\")[1]
     New-WiztreeScan -scanPath $userFolder
+
+}
+
+if ($scanRoot -contains "yes") {
+    New-WiztreeScan -scanPath "$env:SystemDrive"
 }
 
 if ($scanCustomFolder) {
