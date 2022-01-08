@@ -6,6 +6,7 @@ $apps = Invoke-Expression -Command "choco list --local-only"
 #do it a second time, just in case; first run can throw in some adds for Pro/Business that we'd have to filter out
 [array]$apps = @()
 $apps = Invoke-Expression -Command "choco list --local-only"
+#filter out the chocolatey extensions and MS KBs that are installed by choco
 $apps = $apps | Where-Object { $_ -notlike "chocolatey*" -and $_ -notlike "KB*" }
 
 [array]$appList = @()
