@@ -21,7 +21,7 @@ if (!($currentUser)) {
 
 
 $wiztreePath = 'C:\temp\WizTree64.exe'
-$wiztreeINI = 'C:\temp\WizTree3.ini'
+#$wiztreeINI = 'C:\temp\WizTree3.ini'
 function New-WiztreeScan {
     param (
         [Parameter(Mandatory)]
@@ -87,4 +87,4 @@ if ($scanCustomFolder) {
 
 #remove WizTree now that we're done
 Remove-Item $wiztreePath -Force
-Remove-Item $wiztreeINI -Force
+#Remove-Item $wiztreeINI -Force
