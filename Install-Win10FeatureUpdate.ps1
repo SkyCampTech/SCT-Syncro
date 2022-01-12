@@ -159,3 +159,6 @@ Get-UpdateAssistant $updateAssistantURL $downloadPath $logPath $fileName
 #}
 
 Start-Upgrade $downloadPath $fileName $upgradeArguments
+
+#clear the Feature Update Ticket asset custom field
+Set-Asset-Field -Name "Feature Update Ticket" -Value $null
