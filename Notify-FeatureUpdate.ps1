@@ -6,6 +6,14 @@ Import-Module $env:SyncroModule
 *Ticket number will be noted as an Asset Custom Field so we can create a Saved Search to find machines that have had notices sent
 #>
 
+#check if a ticket already exists for the user; exit so we're not sending them notices
+#consider updating this in the future to have a 1week delay and then update them again if it hasn't been completed
+if ($featureUpdateTicket) {
+    Create-Syncro-Ticket-Comment -TicketIdOrNumber $featureUpdateTicket -Subject "Update" -Body "Script ran again for this machine. Consider reaching out to user" -Hidden "True" -DoNotEmail "True"
+    Write-Host "Ticket already exists for this machine; exiting for now"
+    exit
+}
+
 #check if Windows 10; exit if not
 $OS = (Get-CimInstance Win32_OperatingSystem).caption
 if (-Not ($OS -like "Microsoft Windows 10*")) {
