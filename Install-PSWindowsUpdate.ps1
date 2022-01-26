@@ -1,5 +1,6 @@
 Import-Module $env:SyncroModule
 
+Import-Module -Name "PowerShellGet"
 Install-Module -Name "PSWindowsUpdate" -Force
 
 Start-Sleep -Seconds 30

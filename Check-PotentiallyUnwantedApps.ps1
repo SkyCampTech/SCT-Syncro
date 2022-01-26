@@ -1,17 +1,16 @@
 Import-Module $env:SyncroModule
 
-#credit to someone in the FB syncro group. I can't find the post, but this is not my original work
-
 # Application list arrays, you can add more if you want
 $security = @("ahnlab", "avast", "avg", "avira", "bitdefender", "checkpoint", "clamwin", "comodo", "dr.web", "eset ", "fortinet", "f-prot", "f-secure", "g data", "immunet", "kaspersky", "mcafee", "nano", "norton", "panda", "qihoo 360", "segurazo", "sentinel", "sophos", "symantec", "trend micro", "trustport", "webroot", "zonealarm")
 $remoteaccess = @("aeroadmin", "alpemix", "ammyy", "anydesk", "asg-remote", "aspia", "bomgar", "chrome remote", "cloudberry remote", "dameware", "dayon", "deskroll", "dualmon", "dwservice", "ehorus", "fixme.it", "gosupportnow", "gotoassist", "gotomypc", "guacamole", "impcremote", "instant housecall", "instatech", "isl alwayson", "isl light", "join.me", "jump desktop", "kaseya", "lite manager", "logmein", "mikogo", "meshcentral", "mremoteng", "nomachine", "opennx", "optitune", "pilixo", "radmin", "remotetopc", "remotepc", "remote utilities", "rescueassist", "screenconnect", "showmypc", "simplehelp", "splashtop", "supremo", "take control", "teamviewer", "thinfinity", "ultraviewer", "vnc", "wayk now", "x2go", "zoho assist")
 $rmm = @("atera", "connectwise", "continuum", "datto", "GFI", "itsplatform", "itsupport247", "kaseya", "ninja", "optitune", "pulseway", "solarwinds")
+
  
 # Combine our lists, if you create more lists be sure to add them here
 $apps = $security + $remoteaccess + $rmm
  
 # Allowlist array, you must use the full name for the matching to work!
-$allowlist = @("Core", "Splashtop for RMM", "Splashtop Software Updater", "Splashtop Streamer")
+$allowlist = @("Core", "Splashtop for RMM", "Splashtop Software Updater", "Splashtop Streamer", "Webroot SecureAnywhere", "Samsung Data Migration")
 Write-Output "Allowed Apps at Root Level:" ($allowlist -join ", ")
 $allowlist += ($orgallowlist -split ",").Trim()
 Write-Output "Allowed Apps at Organization Level: $orgallowlist"
