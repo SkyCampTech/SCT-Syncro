@@ -10,7 +10,7 @@ $rmm = @("atera", "connectwise", "continuum", "datto", "GFI", "itsplatform", "it
 $apps = $security + $remoteaccess + $rmm
  
 # Allowlist array, you must use the full name for the matching to work!
-$allowlist = @("Core", "Splashtop for RMM", "Splashtop Software Updater", "Splashtop Streamer", "Webroot SecureAnywhere", "Samsung Data Migration")
+$allowlist = @("Core", "Splashtop for RMM", "Splashtop Software Updater", "Splashtop Streamer", "Webroot SecureAnywhere", "Samsung Data Migration", "GoTo Opener")
 Write-Output "Allowed Apps at Root Level:" ($allowlist -join ", ")
 $allowlist += ($orgallowlist -split ",").Trim()
 Write-Output "Allowed Apps at Organization Level: $orgallowlist"
