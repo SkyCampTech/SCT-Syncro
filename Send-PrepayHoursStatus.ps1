@@ -41,6 +41,10 @@ Write-Host "All updates posted to Ticket Number: $ticketNum"
 #update the ticket with a public notice with prepaid hours; this does not email the client
 #change DoNotEmail to False if you don't have "Resolved" emails going out
 Create-Syncro-Ticket-Comment -TicketIdOrNumber $ticketId -Subject "Update" -Body $ticketBody -Hidden "false" -DoNotEmail "true"
+Write-Host "Added public comment to ticket $ticketNum"
 
 #close the ticket; if you have "Resolved" emails going out, this should show the last Public Comment, which would be the comment submitted previously
 Update-Syncro-Ticket -TicketIdOrNumber $ticketId -Status "Resolved"
+Write-Host "Resolved ticket $ticketNum"
+
+exit
