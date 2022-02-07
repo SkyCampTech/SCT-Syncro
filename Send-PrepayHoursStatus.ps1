@@ -34,6 +34,9 @@ $mspName
 #create the new ticket and get the ticket ID
 $newTicket = Create-Syncro-Ticket -Subject $ticketSubject -IssueType "Account Management" -Status "New"
 $ticketId = $newTicket.ticket.id
+$ticketNum = $newTicket.ticket.number
+
+Write-Host "All updates posted to Ticket Number: $ticketNum"
 
 #send the email to the client
 Create-Syncro-Ticket-Comment -TicketIdOrNumber $ticketId -Subject "Update" -Body $ticketBody -Hidden "false" -DoNotEmail "False"
