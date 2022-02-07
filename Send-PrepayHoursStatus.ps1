@@ -15,6 +15,12 @@ if (!$($customerName)) {
     $customerName = "there"
 }
 
+#check for no hours defined and replace with 0
+if (!($prepayHours)) {
+    $prepayHours = 0
+    Write-Host "Client has no hours left. Prepaid hours: $prepayHours"
+}
+
 #edit the body to be whatever you want to send to the client. Leave the @" in place to preserve formatting and only edit the content in between
 $ticketBody = @"
 Hi $customerName,
