@@ -6,8 +6,6 @@ Write-Host "customerName: $customerName `n"
 Write-Host "customerEmail: $customerEmail `n"
 Write-Host "prepayHours: $prepayHours"
 
-$mspName = "Your MSP Name Here"
-
 #edit the subject to whatever you want it to be
 $ticketSubject = "$mspName - Prepaid Hours Balance"
 
