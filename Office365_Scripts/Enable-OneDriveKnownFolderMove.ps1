@@ -14,6 +14,8 @@ if (!(Test-Path -Path $regPath)) {
     New-Item -Path $regPath -Force
 }
 
+Write-Host "Enabling Known Folder Move on $nev:ComputerName with Tenant ID: $tenantID"
+
 New-ItemProperty -Path $regPath -Name "KFMSilentOptIn" -Value $tenantID -Force
 New-ItemProperty -Path $regPath -Name "KFMSilentOptInWithNotification" -Value "1" -Force
 
