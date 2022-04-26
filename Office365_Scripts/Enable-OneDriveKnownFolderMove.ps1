@@ -1,5 +1,5 @@
 #adapted for Syncro from https://www.cyberdrain.com/monitoring-with-powershell-monitoring-onedrive-known-folder-move/
-#run this as Current User in Syncro. This script does not do impersonation
+#run this as System in Syncro. This script is setting the HKLM settings
 Import-Module $env:SyncroModule
 
 #check to make sure we are able to pull a tenant ID from the Customer's Custom Fields; must be pre set. We do this by API
