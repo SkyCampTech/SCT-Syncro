@@ -3,7 +3,7 @@
 Import-Module $env:SyncroModule
 
 #corresponds to "Ignore OneDrive KFM Status asset custom field"
-if ($noKFM -eq "yes" -or "true") {
+if ($noKFM -eq "yes") {
     Write-Host "Known Folder Move not required on this machine. Exiting"
     exit
 }
