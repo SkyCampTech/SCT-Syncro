@@ -13,7 +13,7 @@ if (!(Test-Path $fortiClientPath)) {
 }
 else {
     #check FortiClient version number
-    $fortiClientVersion = (Get-ItemProperty -Path $fortiClientPath | Select -ExpandProperty VersionInfo).FileVersion
+    $fortiClientVersion = (Get-ItemProperty -Path $fortiClientPath | Select-Object -ExpandProperty VersionInfo).FileVersion
     Write-Host "Installed FortiClient Version: $fortiClientVersion"
 }
 
