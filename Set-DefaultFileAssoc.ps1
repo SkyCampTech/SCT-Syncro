@@ -30,3 +30,5 @@ Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID" -Wait
 $current = & $FTAexe get | findstr $fileExtension
 
 Write-Host "New Config: $current"
+
+#test
