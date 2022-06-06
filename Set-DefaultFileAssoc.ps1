@@ -4,18 +4,19 @@
 
 Import-Module $env:SyncroModule
 
-$FTAexe = "c:\temp\setuserfta.exe"
+$FTAexe = "c:\programdata\skycamptech\bin\SetUserFTA.exe"
 
 $programList = @{
-    "Adobe Reader" = "AcroExch.Document.DC"
-    "Edge PDF"     = "MSEdgePDF"
-    "VLC Mov"      = "VLC.mov"
-    "Photos"       = "AppX43hnxtbyyps62jhe9sqpdzxn1790zetc"
+    "Adobe Reader"   = "AcroExch.Document.DC"
+    "Edge PDF"       = "MSEdgePDF"
+    "VLC Mov"        = "VLC.mov"
+    "Chrome Browser" = "ChromeHTML"
+    "Edge Browser"   = "MSEdgeHTM"
 }
 
-if ($fileExtension -notcontains ".") {
-    $fileExtension = "." + $fileExtension
-}
+#if($fileExtension -notcontains "."){
+#    $fileExtension = "." + $fileExtension
+#}
 
 $programID = $programList[$programName]
 
