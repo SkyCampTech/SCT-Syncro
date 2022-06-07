@@ -6,6 +6,49 @@ Import-Module $env:SyncroModule
 
 $FTAexe = "c:\programdata\skycamptech\bin\SetUserFTA.exe"
 
+#hashtable for each target
+$browserProgIds = @{
+    "Firefox" = "FirefoxURL-308046B0AF4A39CB"
+    "Chrome"  = "ChromeHTML"
+    "Edge"    = "MSEdgeHTM"
+}
+
+$pdfProgIds = @{
+    "Firefox"     = "FirefoxPDF-308046B0AF4A39CB"
+    "Chrome"      = "ChromePDF"
+    "Edge"        = "MSEdgePDF"
+    "AdobeReader" = "AcroExchDocument.DC"
+}
+
+$mailProgIds = @{
+    "Outlook"     = "Outlook.URL.mailto.15"
+    "WindowsMail" = "AppXydk58wgm44se4b399557yyyj1w7mbmvd"
+    "Edge"        = "MSEdgeHTM"
+    "Chrome"      = "ChromeHTML"
+    "Firefox"     = "FirefoxURL-308046B0AF4A39CB"
+}
+
+#hashtable of extensions/protocols to target when adjusting something
+$extOrProtocol = @{
+    "Browser"  = @{
+        "HTTP"  = "http"
+        "HTTPS" = "https"
+    }
+    "PDF"      = ".pdf"
+    "Mail"     = "mailto"
+    "MOV"      = ".mov"
+    "MP4"      = ".mp4"
+    "FLV"      = ".flv"
+    "AVI"      = ".avi"
+    "M4A"      = ".m4a"
+    "M4V"      = ".m4v"
+    "WAV"      = ".wav"
+    "FTP"      = "ftp"
+    "WebCal"   = "webcal"
+    "Telepone" = "tel"
+    "Zoom"     = "ZoomPhoneCall"
+}
+
 $programList = @{
     "Adobe Reader"   = "AcroExch.Document.DC"
     "Edge PDF"       = "MSEdgePDF"
@@ -13,6 +56,10 @@ $programList = @{
     "Chrome Browser" = "ChromeHTML"
     "Edge Browser"   = "MSEdgeHTM"
 }
+
+#everything from here down should be refactored to account for the hashtables above
+#pull current settings and log it
+#update to the above; assume it's passed by dropdown (Browser, PDF, Mail are the ones we want to start with)
 
 #if($fileExtension -notcontains "."){
 #    $fileExtension = "." + $fileExtension
