@@ -20,7 +20,7 @@ $pdfProgIds = @{
     "Firefox"     = "FirefoxPDF-308046B0AF4A39CB"
     "Chrome"      = "ChromePDF"
     "Edge"        = "MSEdgePDF"
-    "AdobeReader" = "AcroExchDocument.DC"
+    "AdobeReader" = "AcroExch.Document.DC"
 }
 
 $mailProgIds = @{
@@ -41,6 +41,8 @@ $extOrProtocol = @{
     "Browser"  = @{
         "HTTP"  = "http"
         "HTTPS" = "https"
+        "HTM"   = ".htm"
+        "HTML"  = ".html"
     }
     "PDF"      = ".pdf"
     "Mail"     = "mailto"
@@ -91,7 +93,7 @@ switch ($setDefault) {
         $programList = $mailProgIds
     }
     "Video" {
-        $programList = $pdfProgIds
+        $programList = $videoProgIds
     }
 }
 $programID = $programList[$programName] #programID is the targeted application
@@ -106,7 +108,7 @@ foreach ($this in $fileExtension.Keys) {
     Write-Host "Changing $this to use $programName with $programID"
     if ($setDefault -eq "Video") {
         
-        Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID.$fileExtension" -Wait;
+        Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID$fileExtension" -Wait;
     }
     else {
         Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID" -Wait;
