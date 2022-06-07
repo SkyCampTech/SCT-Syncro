@@ -99,23 +99,35 @@ switch ($setDefault) {
 $programID = $programList[$programName] #programID is the targeted application
 
 Write-Host "file extension or protocol: " -Separator $fileExtension.Keys
-
-foreach ($this in $fileExtension) {
-    <# $this is the current item #>
-    $current = & $FTAexe get | findstr $this
+if ($fileExtension -isnot [System.Collections.Hashtable]) {
+    $current = & $FTAexe get | findstr $fileExtension
 
     Write-Host "Current Config: $current"
-    Write-Host "Changing $this to use $programName with $programID"
-    if ($setDefault -eq "Video") {
-        $tempVideo = $programID + $this
-        Start-Process -FilePath $FTAexe -ArgumentList "$this $tempVideo" -Wait;
-    }
-    else {
-        Start-Process -FilePath $FTAexe -ArgumentList "$this $programID" -Wait;
-    }
+    Write-Host "Changing $fileExtension to use $programName with $programID"
+
+    Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID" -Wait;
+    
     $current = & $FTAexe get | findstr $fileExtension
 
     Write-Host "New Config: $current"
 }
+else {
+    foreach ($this in $fileExtension.GetEnumerator()) {
+        <# $this is the current item #>
+        $current = & $FTAexe get | findstr $this
 
+        Write-Host "Current Config: $current"
+        Write-Host "Changing $this to use $programName with $programID"
+        if ($setDefault -eq "Video") {
+            $tempVideo = $programID + $($this.value)
+            Start-Process -FilePath $FTAexe -ArgumentList "$($this.value) $tempVideo" -Wait;
+        }
+        else {
+            Start-Process -FilePath $FTAexe -ArgumentList "$($this.value) $programID" -Wait;
+        }
+        $current = & $FTAexe get | findstr $this
+
+        Write-Host "New Config: $current"
+    }
+}
 
