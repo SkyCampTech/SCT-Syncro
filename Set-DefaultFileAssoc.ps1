@@ -100,18 +100,18 @@ $programID = $programList[$programName] #programID is the targeted application
 
 Write-Host "file extension or protocol: " -Separator $fileExtension.Keys
 
-foreach ($this in $fileExtension.Values) {
+foreach ($this in $fileExtension) {
     <# $this is the current item #>
     $current = & $FTAexe get | findstr $this
 
     Write-Host "Current Config: $current"
     Write-Host "Changing $this to use $programName with $programID"
     if ($setDefault -eq "Video") {
-        
-        Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID$fileExtension" -Wait;
+        $tempVideo = $programID + $this
+        Start-Process -FilePath $FTAexe -ArgumentList "$this $tempVideo" -Wait;
     }
     else {
-        Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID" -Wait;
+        Start-Process -FilePath $FTAexe -ArgumentList "$this $programID" -Wait;
     }
     $current = & $FTAexe get | findstr $fileExtension
 
