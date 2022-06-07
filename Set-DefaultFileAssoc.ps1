@@ -7,7 +7,7 @@ Import-Module $env:SyncroModule
 $FTAexe = "c:\programdata\skycamptech\bin\SetUserFTA.exe"
 
 <#SYNCRO: needs to send two variables. 
-$setprogram = the type ex: video, pdf, etc
+$setDefault = the type ex: video, pdf, etc
 $programName = the desired program ex: firefox, adobe, chrome, etc.#>
 #hashtable for each target
 $browserProgIds = @{
@@ -29,6 +29,10 @@ $mailProgIds = @{
     "Edge"        = "MSEdgeHTM"
     "Chrome"      = "ChromeHTML"
     "Firefox"     = "FirefoxURL-308046B0AF4A39CB"
+}
+
+$videoProgIds = @{
+    "VLC" = "VlC"
 }
 
 #hashtable of extensions/protocols to target when adjusting something
@@ -73,10 +77,10 @@ $extOrProtocol = @{
 #}
 
 #Sets extensions to change
-$fileExtension = $extOrProtocol[$setProgram];
+$fileExtension = $extOrProtocol[$setDefault];
 
 # Sets program type
-switch ($setProgram) {
+switch ($setDefault) {
     "Browser" {
         $programList = $browserProgIds;
     }
@@ -99,7 +103,7 @@ foreach ($this in $fileExtension) {
 
     Write-Host "Current Config: $current"
     Write-Host "Changing $this to use $programName with $programID"
-    if ($setProgram -eq "Video") {
+    if ($setDefault -eq "Video") {
         
         Start-Process -FilePath $FTAexe -ArgumentList "$fileExtension $programID.$fileExtension" -Wait;
     }
