@@ -98,9 +98,9 @@ switch ($setDefault) {
 }
 $programID = $programList[$programName] #programID is the targeted application
 
-Write-Host "file extension or protocol: $fileExtension.Keys"
+Write-Host "file extension or protocol: " -Separator $fileExtension.Keys
 
-foreach ($this in $fileExtension.Keys) {
+foreach ($this in $fileExtension.Values) {
     <# $this is the current item #>
     $current = & $FTAexe get | findstr $this
 
