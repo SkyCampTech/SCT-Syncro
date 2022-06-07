@@ -98,7 +98,7 @@ switch ($setDefault) {
 }
 $programID = $programList[$programName] #programID is the targeted application
 
-Write-Host "file extension or protocol: $fileExtension"
+Write-Host "file extension or protocol: $fileExtension.Keys"
 
 foreach ($this in $fileExtension.Keys) {
     <# $this is the current item #>
