@@ -5,11 +5,11 @@ $pinLocation = "C:\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\
 takeown /f $pinLocation /r /d y
 icacls $pinLocation /grant administrators:F /t
 
-$childItems = Get-ChildItem $pinLocation | find NGC
+$childItems = Get-ChildItem $pinLocation
 
 Write-Host "Pins before removal: $childItems"
 
-Remove-Item $pinLocation\* -Force
-$childItems = Get-ChildItem $pinLocation | find NGC
+Remove-Item $pinLocation\* -Force -Recurse -Confirm:$false
+$childItems = Get-ChildItem $pinLocation
 
 Write-Host "Pins after removal: $childItems"
