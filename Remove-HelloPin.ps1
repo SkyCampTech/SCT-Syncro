@@ -2,8 +2,8 @@ Import-Module $env:SyncroModule
 
 $pinLocation = "C:\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\NGC"
 
-takeown /f $pinLocation /r /d y
-icacls $pinLocation /grant administrators:F /t
+takeown /f $pinLocation /r /d y | Out-Null
+icacls $pinLocation /grant administrators:F /t | Out-Null
 
 $childItems = Get-ChildItem $pinLocation
 
