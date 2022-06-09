@@ -27,7 +27,7 @@ if ($Settings -eq "True") {
 }
 
 if ($NewStuffUpdates -eq "True") {
-    $path = "\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"
+    $path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"
     try {
         New-ItemProperty -Path $path -Name "SubscribedContent-338389Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "New stuff from update notifications removed!"
@@ -38,7 +38,7 @@ if ($NewStuffUpdates -eq "True") {
 }
 
 if ($TipsAndTricks -eq "True") {
-    $path = "\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"
+    $path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"
     try {
         New-ItemProperty -Path $path -Name "SubscribedContent-310093Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "Tips, Tricks, and Suggestions notifications removed!"
