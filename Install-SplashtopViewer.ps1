@@ -1,19 +1,23 @@
-<#
- want to sleep for a bit, 
- check to make sure it got installed,
- add a Logged activity, 
- then delete the installer form temp
- #>
-<#
- that is already installed on your computer, so you can look at 
- C:\Program Files (x86)\Splashtop\Splashtop Remote\Client for RMM
- #>
-<#
-clientoobe.exe
-#>
-
 Import-Module $env:SyncroModule
 
 $installerPath = "$env:ProgramData\skycamptech\temp\splashtopviewer.exe"
+$folderPath = "C:\Program Files (x86)\Splashtop\Splashtop Remote\Client for RMM"
+if ((Test-Path -Path $folderPath) -and (Test-Path -Path ($folderPath + "\clientoobe.exe"))) {
+    Write-Host "SplashtopViewer is already installed on device."
+    remove-Item $installerPath -Force -Confirm:$false
+}
+else {
+    Start-Process -FilePath $installerPath -ArgumentList "prevercheck /s" -Wait
 
-Start-Process -FilePath $installerPath -ArgumentList "prevercheck /s"
+    if ((Test-Path -Path $folderPath) -and (Test-Path -Path ($folderPath + "\clientoobe.exe"))) {
+        Write-Host "SplashtopViewer was installed properly."
+    }
+    else {
+        Write-Host "ERROR: SplashtopViewer was NOT installed properly."
+        
+        remove-Item $installerPath -Force -Confirm:$false
+        exit 1
+    }
+
+    remove-Item $installerPath -Force -Confirm:$false
+}
