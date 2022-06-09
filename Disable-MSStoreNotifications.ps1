@@ -22,7 +22,7 @@ if ($Settings -eq "True") {
         Write-Host "System Settings notifications removed!"
     }
     catch {
-        Write-Host "FAILED: Couldn't remove Microsoft Store Notifications"
+        Write-Host "FAILED: Couldn't remove System Settings Notifications"
     }
 }
 
@@ -33,7 +33,7 @@ if ($NewStuffUpdates -eq "True") {
         Write-Host "New stuff from update notifications removed!"
     }
     catch {
-        Write-Host "FAILED: Couldn't remove Microsoft Store Notifications"
+        Write-Host "FAILED: Couldn't remove New stuff from update Notifications"
     }   
 }
 
@@ -44,6 +44,6 @@ if ($TipsAndTricks -eq "True") {
         Write-Host "Tips, Tricks, and Suggestions notifications removed!"
     }
     catch {
-        Write-Host "FAILED: Couldn't remove Microsoft Store Notifications"
+        Write-Host "FAILED: Couldn't remove Tips, Tricks, and Suggestions Notifications"
     }   
 }
