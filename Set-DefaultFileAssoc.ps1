@@ -110,6 +110,7 @@ if ($fileExtension -isnot [System.Collections.Hashtable]) {
     $current = & $FTAexe get | findstr $fileExtension
 
     Write-Host "New Config: $current"
+    Log-Activity -Message "New Config: $current"
 }
 else {
     foreach ($this in $fileExtension.GetEnumerator()) {
@@ -128,6 +129,7 @@ else {
         $current = & $FTAexe get | findstr $this
 
         Write-Host "New Config: $current"
+        Log-Activity -Message "New Config: $current"
     }
 }
 
