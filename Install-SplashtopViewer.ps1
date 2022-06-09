@@ -11,6 +11,7 @@ else {
 
     if ((Test-Path -Path $folderPath) -and (Test-Path -Path ($folderPath + "\clientoobe.exe"))) {
         Write-Host "SplashtopViewer was installed properly."
+        Log-Activity -Message "Installed Splashtop Viewer"
     }
     else {
         Write-Host "ERROR: SplashtopViewer was NOT installed properly."
