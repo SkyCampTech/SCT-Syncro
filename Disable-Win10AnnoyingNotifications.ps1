@@ -7,6 +7,7 @@ if ($MicrosoftStore -eq "True") {
     try {
         New-ItemProperty -Path $path -Name "Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "Microsoft Store notifications removed!"
+        Log-Activity -Message "Microsoft Store notifications removed!"
     }
     catch {
         Write-Host "FAILED: Couldn't remove Microsoft Store Notifications"
@@ -20,6 +21,7 @@ if ($Settings -eq "True") {
     try {
         New-ItemProperty -Path $path -Name "Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "System Settings notifications removed!"
+        Log-Activity -Message "System Settings notifications removed!"
     }
     catch {
         Write-Host "FAILED: Couldn't remove System Settings Notifications"
@@ -31,6 +33,7 @@ if ($NewStuffUpdates -eq "True") {
     try {
         New-ItemProperty -Path $path -Name "SubscribedContent-338389Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "New stuff from update notifications removed!"
+        Log-Activity -Message "New stuff from update notifications removed!"
     }
     catch {
         Write-Host "FAILED: Couldn't remove New stuff from update Notifications"
@@ -42,6 +45,7 @@ if ($TipsAndTricks -eq "True") {
     try {
         New-ItemProperty -Path $path -Name "SubscribedContent-310093Enabled" -Value 0 -PropertyType DWord -Force 
         Write-Host "Tips, Tricks, and Suggestions notifications removed!"
+        Log-Activity -Message "Tips, Tricks, and Suggestions notifications removed!"
     }
     catch {
         Write-Host "FAILED: Couldn't remove Tips, Tricks, and Suggestions Notifications"

@@ -13,3 +13,4 @@ Remove-Item $pinLocation\* -Force -Recurse -Confirm:$false
 $childItems = Get-ChildItem $pinLocation
 
 Write-Host "Pins after removal: $childItems"
+Log-Activity -Message "Windows Hello pins were removed"
