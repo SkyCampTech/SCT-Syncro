@@ -1,28 +1,33 @@
 Import-Module $env:SyncroModule
 
 $FontFolder = "$env:ProgramData\skycamptech\temp\"
+$FontPackage = $FontFolder + $FontPackage + ".zip"
 Remove-Item ($FontFolder + "*.ttf", "*.otf", "*.fon", "*.fnt") -Force
-
-$FontPackage = "Fonts.zip" #Remove for final version
-$FontPackage = ($FontFolder + $FontPackage)
 
 
 #Set Font Reg Key Path
 $FontRegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
 
-Expand-Archive -LiteralPath $FontPackage -DestinationPath $FontFolder
+Expand-Archive -LiteralPath $FontPackage -DestinationPath $FontFolder -Force
 #Grab the Font from the Current Directory
 try {
-    foreach ($Font in $(Get-ChildItem -Path $FontFolder -Include *.ttf, *.otf, *.fon, *.fnt -Recurse)) {
+    $FontList = (Get-ChildItem -Path $FontFolder -Include *.ttf, *.otf, *.fon, *.fnt -Recurse)
+    foreach ($Font in $FontList) {
  
-        #Copy Font to the Windows Font Directory
-        Copy-Item $Font "C:\Windows\Fonts" -Force
         
-        #Set the Registry Key to indicate the Font has been installed
-        New-ItemProperty -Path $FontRegPath -Name $Font.Name -Value $Font.Name -PropertyType String | Out-Null
-        Write-Host $Font.name " Font was added to the device"
-    }    
-    Log-Activity "Successfully added font package containing: " $Font.Name
+        if (Test-Path -Path ("C:\Windows\Fonts\" + $Font.Name)) {
+            Write-Host $Font.name " Font is already on the device." -ForegroundColor Green
+        }
+        else {
+            #Copy Font to the Windows Font Directory
+            Copy-Item $Font "C:\Windows\Fonts" -Force
+        
+            #Set the Registry Key to indicate the Font has been installed
+            New-ItemProperty -Path $FontRegPath -Name $Font.Name -Value $Font.Name -PropertyType String | Out-Null
+            Write-Host $Font.name " Font was installed on the device" -ForegroundColor Green
+        }   
+    } 
+    # Log-Activity ("Successfully installed font package containing: " + ($FontList -split ', ', 1))
 }
 catch {
     Write-Host "ERROR: " $Font.Name " font failed to install properly." -ForegroundColor Red
