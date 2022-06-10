@@ -27,7 +27,7 @@ try {
             Write-Host $Font.name " Font was installed on the device" -ForegroundColor Green
         }   
     } 
-    # Log-Activity ("Successfully installed font package containing: " + ($FontList -split ', ', 1))
+    Log-Activity -message ("Successfully installed font package containing: " + ($FontList.Name -split ', ', 1))
 }
 catch {
     Write-Host "ERROR: " $Font.Name " font failed to install properly." -ForegroundColor Red
