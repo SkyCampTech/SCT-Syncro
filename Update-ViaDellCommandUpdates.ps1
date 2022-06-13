@@ -1,9 +1,9 @@
 Import-Module $env:SyncroModule
 
-$MachineModel = Get-WMIObject -class Win32_ComputerSystem | Select-Object -Property "Manufacturer" 
-if ($MachineModel.Value -eq "Dell inc.") {
+$MachineModel = Get-WMIObject -class Win32_ComputerSystem
+if ($MachineModel["Manufacturer"] -eq "Dell inc.") {
     #If check for dell-commmand
-    $choco = 'C:\Program Files\RepairTech\Syncro\kabuto_app_manager\kabuto_patch_manager.exe'
+    $choco = "$env:ProgramData\chocolatey\choco.exe"
 
     #Try to upgrade but if that fails do an install
     try {
@@ -16,9 +16,10 @@ if ($MachineModel.Value -eq "Dell inc.") {
     }
 
     $executablePath = "$env:Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe"
-    $tempFolder = "$env:ProgramData\SkyCampTech\temp"
+    $tempFolder = "C:\temp"
 
-    Start-Process "$($executablePath)" -ArgumentList "/scan -report=$($tempFolder)" -Wait
+    Invoke-Expression -Command "C:\'Program Files (x86)'\Dell\CommandUpdate\dcu-cli.exe /scan -report=$tempFolder"
+    # Start-Process -FilePath "dcu-cli.exe" -WorkingDirectory "C:\Program Files (x86)\Dell\CommandUpdate" -ArgumentList "/scan -report=$tempFolder" -Wait
     write-host "Checking for results."
 
     if (Test-Path -path "$tempFolder\DCUApplicableUpdates.xml") {
@@ -55,14 +56,17 @@ if ($MachineModel.Value -eq "Dell inc.") {
         }
         remove-item "$tempFolder\DCUApplicableUpdates.xml" -Force #Remove XML file
         write-host "Updating Drivers! This may take a while..."
-        Start-Process "$($executablePath)" -ArgumentList "/applyUpdates -autoSuspendBitLocker=enable -reboot=$($Reboot) -outputLog=$($tempFolder)\updateOutput.log" -Wait
+        Invoke-Expression -Command "C:\'Program Files (x86)'\Dell\CommandUpdate\dcu-cli.exe /applyUpdates -autoSuspendBitLocker=enable -reboot=$($Reboot) -outputLog=$tempFolder\updateOutput.log"
         Start-Sleep -s 60
         Get-Content -Path '$tempFolder\updateOutput.log'
         Log-Activity -Message "Dell Command Updates ran."
         write-host "Done."
     }
+    else {
+        Write-Host "No updates are available to install."
+    }
 }
 else {
-    Write-Host $MachineModel.Value " is not a dell product and can't install Dell Command."
+    Write-Host $MachineModel " is not a dell product and can't install Dell Command."
     exit 1
 }
