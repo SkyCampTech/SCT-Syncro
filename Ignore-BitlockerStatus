@@ -13,6 +13,9 @@ else {
             rmm-alert -Category "BitLocker" -Body "Bitlocker is off on $env:COMPUTERNAME"
             exit;
         }
+        else {
+            Write-Host "Bitlocker is ON"
+        }
     }
     catch {
         Write-Host "[Error] Could not determine Bitlocker status on $env:COMPUTERNAME"
