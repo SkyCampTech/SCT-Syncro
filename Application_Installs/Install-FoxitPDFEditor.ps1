@@ -13,9 +13,7 @@ Start-BitsTransfer -Source $downloadURL -Destination $foxitInstaller
 
 function Install-FoxitWithKeycode {
     Write-Host "Keycode included; Installing Foxit with Activation Keycode"
-    $installArgs = @"
-    /i $foxitInstaller /aAll keycode="$($keycode)"
-"@
+    $installArgs = "/i $foxitInstaller keycode='$($keycode)' /quiet"
     Start-Process $msiexecPath -ArgumentList $installArgs -Wait
 
     $activationPath = "C:\Program Files (x86)\Foxit Software\Foxit PDF Editor\Activation.exe"
@@ -32,10 +30,9 @@ function Install-FoxitWithKeycode {
 
 function Install-FoxitNoKeycode {
     Write-Host "Installing Foxit with no keycode; will need to manually be activated"
-    $installArgs = @"
-    /i $foxitInstaller /sAll"
-"@
-    Start-Process $msiexecPath -ArgumentList $installArgs -Wait
+    $installArgs = "/i $foxitInstaller /quiet"  #msiexec /i "Foxit PDF Editor.msi" /quiet INSTALLLOCATION="C:\Program Files\ Foxit Software "
+    Write-Host "Argument sent $isntallArgs"
+    Start-Process msiexec.exe -Wait -ArgumentList $installArgs
     
 }
 
