@@ -1,3 +1,5 @@
+Import-Module $env:SyncroModule
+
 # Unpin taskbar items
 function Unpin {
     param ([string]$appname)

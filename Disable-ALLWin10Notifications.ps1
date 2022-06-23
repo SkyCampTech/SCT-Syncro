@@ -1,3 +1,5 @@
+Import-Module $env:SyncroModule
+
 # Dismiss Windows Defender alerts about Windows Hello/Microsoft account
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_WindowsHello_Available" -Value 0 -PropertyType DWord -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_MicrosoftAccount_Disconnected" -Value 0 -PropertyType DWord -Force
