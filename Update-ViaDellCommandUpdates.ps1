@@ -62,9 +62,11 @@ if ($MachineModel["Manufacturer"] -eq "Dell inc.") {
             remove-item "$tempFolder\updateOutput.log" -Force
         }
         write-host "Done."
+        exit 0
     }
     else {
         Write-Host "No updates are available to install."
+        exit 0
     }
 }
 else {
