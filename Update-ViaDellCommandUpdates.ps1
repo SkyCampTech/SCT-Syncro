@@ -15,10 +15,10 @@ if ($MachineModel["Manufacturer"] -eq "Dell inc.") {
         Write-Host "Dell Command was installed"
     }
 
-    $executablePath = "$env:Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe"
+    $executablePath = "${env:ProgramFiles(x86)}\Dell\CommandUpdate\dcu-cli.exe"
     $tempFolder = "C:\temp"
 
-    Invoke-Expression -Command "C:\'Program Files (x86)'\Dell\CommandUpdate\dcu-cli.exe /scan -report=$tempFolder"
+    Invoke-Expression -Command "$executablePath /scan -report=$tempFolder"
     # Start-Process -FilePath "dcu-cli.exe" -WorkingDirectory "C:\Program Files (x86)\Dell\CommandUpdate" -ArgumentList "/scan -report=$tempFolder" -Wait
     write-host "Checking for results."
 
@@ -56,7 +56,7 @@ if ($MachineModel["Manufacturer"] -eq "Dell inc.") {
         }
         remove-item "$tempFolder\DCUApplicableUpdates.xml" -Force #Remove XML file
         write-host "Updating Drivers! This may take a while..."
-        Invoke-Expression -Command "C:\'Program Files (x86)'\Dell\CommandUpdate\dcu-cli.exe /applyUpdates -autoSuspendBitLocker=enable -reboot=$($Reboot) -outputLog=$tempFolder\updateOutput.log"
+        Invoke-Expression -Command "$executablePath /applyUpdates -autoSuspendBitLocker=enable -reboot=$($Reboot) -outputLog=$tempFolder\updateOutput.log"
         Start-Sleep -s 60
         Get-Content -Path '$tempFolder\updateOutput.log'
         Log-Activity -Message "Dell Command Updates ran."
