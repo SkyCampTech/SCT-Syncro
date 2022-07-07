@@ -1,0 +1,12 @@
+Name Of Script: Install-FontPackage.ps1
+
+Purpose of Script: Installs a font package by unpacking a zip folder of all the fonts in that zip. 
+    This adds fonts in the registry and the file explorer so it fully recognizes it.
+
+Inputs Required: Zip folder with only the fonts wrapped into the zip and not in a folder in the zip.
+
+Inputs Optional: N/A
+
+Expected Output if Success: It writes output and logs activity of the fonts being installed.
+
+Expected Output/Result if Fail: Should write that the install failed and remove all files from temp folder.
