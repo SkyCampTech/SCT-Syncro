@@ -1,0 +1,12 @@
+Name Of Script: Set-DefaultFileAssoc.ps1
+
+Purpose of Script: Sets the default file opener so pdf, browser, mail, video is opened from the desired app.
+
+Inputs Required: 2 dropdowns. One setDefault which is the file type that needs to be opened. 
+    Two is the program name that the program is called.
+
+Inputs Optional: N/A
+
+Expected Output if Success: It should log the activity and write-host that the output succeded
+
+Expected Output/Result if Fail: It should fail out.
