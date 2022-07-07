@@ -53,5 +53,9 @@ function DownloadAppxPackage {
 }
 
 DownloadAppxPackage $MSStoreURL "C:\ProgramData\SkyCampTech\temp"
-Add-AppxPackage -path C:\ProgramData\SkyCampTech\temp\*.APPX*
+
+Start-Sleep -Seconds 5
+Add-AppxPackage -path C:\ProgramData\SkyCampTech\temp\*.APPX* -ForceApplicationShutdown
+
+Start-Sleep -Seconds 5
 Remove-Item -path C:\ProgramData\SkyCampTech\temp\*.APPX* -Force
