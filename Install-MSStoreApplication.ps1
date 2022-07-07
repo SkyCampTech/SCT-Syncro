@@ -52,8 +52,18 @@ function DownloadAppxPackage {
   }
 }
 
-DownloadAppxPackage $MSStoreURL "C:\ProgramData\SkyCampTech\temp"
-
+switch ($StandardURL) {
+  "HEIC Image Viewer" { $URL = "https://apps.microsoft.com/store/detail/heic-image-viewer/9MXHSBJRS7SH?hl=en-us&gl=US" }
+  "HEIC Converter" { $URL = "https://apps.microsoft.com/store/detail/heic-converter-heic-to-jpg/9PKB9Q1GG832?hl=en-us&gl=US" }
+  "MsToDo" { $URL = "https://apps.microsoft.com/store/detail/microsoft-to-do-lists-tasks-reminders/9NBLGGH5R558?hl=en-us&gl=US" }
+  Default { $URL = $null }
+}
+if ($null -ne $MSStoreURL) {
+  DownloadAppxPackage $MSStoreURL "C:\ProgramData\SkyCampTech\temp"
+}
+if ($null -ne $URL) {
+  DownloadAppxPackage $URL "C:\ProgramData\SkyCampTech\temp"
+}
 Start-Sleep -Seconds 5
 Add-AppxPackage -path C:\ProgramData\SkyCampTech\temp\*.APPX* -ForceApplicationShutdown
 
