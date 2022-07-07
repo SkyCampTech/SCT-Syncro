@@ -66,8 +66,16 @@ if ($null -ne $MSStoreURL) {
 if ($null -ne $URL) {
   DownloadAppxPackage $URL "C:\ProgramData\SkyCampTech\temp"
 }
-Start-Sleep -Seconds 5
-Add-AppxPackage -path C:\ProgramData\SkyCampTech\temp\*.APPX* -ForceApplicationShutdown
-
-Start-Sleep -Seconds 5
-Remove-Item -path C:\ProgramData\SkyCampTech\temp\*.APPX* -Force
+try {
+  Start-Sleep -Seconds 5
+  Add-AppxPackage -path C:\ProgramData\SkyCampTech\temp\*.APPX* -ForceApplicationShutdown
+  Write-Host "Applications were installed"
+  Start-Sleep -Seconds 5
+  Remove-Item -path C:\ProgramData\SkyCampTech\temp\*.APPX* -Force
+}
+catch {
+  Write-Host "Applications Failed to install"
+  Start-Sleep -Seconds 5
+  Remove-Item -path C:\ProgramData\SkyCampTech\temp\*.APPX* -Force
+  exit 1
+}

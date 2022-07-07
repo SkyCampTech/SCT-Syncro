@@ -1,0 +1,11 @@
+Name Of Script: Install-MSStoreApplication.ps1
+
+Purpose of Script: To download ms store applications without having a ms store account associated.
+
+Inputs Required: Either URL written in or a marked dropbox added.
+
+Inputs Optional: Can put in a dropbox entry and URL to install multiple.
+
+Expected Output if Success: It will write host that it is installed.
+
+Expected Output/Result if Fail: It will show a failed status for the install if an error occured during installation.
