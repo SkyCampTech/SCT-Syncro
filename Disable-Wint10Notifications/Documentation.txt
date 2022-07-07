@@ -1,0 +1,25 @@
+Name Of Script: Disable-ALLWin10Notifications
+
+Purpose of Script: Disables all of the suggestion notifications that aren't needed
+
+Inputs Required: N/A
+
+Inputs Optional: N/A
+
+Expected Output if Success: It should disable all microsoft, xbox, settings, etc. notifications
+
+Expected Output/Result if Fail: If it does fail it should not disable the notificiations.
+
+
+
+Name Of Script: Disable-Win10AnnoyingNotifications
+
+Purpose of Script:
+
+Inputs Required: 4 inputs for the different notifications that need to be disabled. which are matched with string "true".
+
+Inputs Optional: N/A
+
+Expected Output if Success: It should disable all microsoft, xbox, settings, etc. notifications
+
+Expected Output/Result if Fail: If it does fail it should not disable the notificiations.
