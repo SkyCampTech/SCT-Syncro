@@ -1,3 +1,5 @@
+Import-Module $env:SyncroModule
+
 function DownloadAppxPackage {
   [CmdletBinding()]
   param (
