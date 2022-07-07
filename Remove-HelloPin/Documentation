@@ -1,0 +1,11 @@
+Name Of Script: Remove-HelloPin.ps1
+
+Purpose of Script: Removes/Resets all windows hello pins.
+
+Inputs Required: N/A
+
+Inputs Optional: N/A
+
+Expected Output if Success: The pins after removal message should be empty.
+
+Expected Output/Result if Fail: The pins after removal message should not be empty.
