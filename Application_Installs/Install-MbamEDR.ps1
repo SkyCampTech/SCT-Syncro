@@ -2,7 +2,7 @@
 <#Assumptions:
 -$customerGroup is a Custom Customer Field
 -$manualGroup is provided at runtime if you wish to override the Customer's Group ID
--installer is provided as a required file under c:\tools; adjust accordingly
+-installer is .exe and provided as a required file in the syncro script and will be saved under c:\tools; adjust accordingly
 #>
 Import-Module $env:SyncroModule
 
@@ -22,13 +22,13 @@ if (!((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent
     Write-Host "Services not found; proceeding with install"
 
     #define variables
-    $installPath = "c:\tools\mbamEDR.msi"
+    $installPath = "c:\tools\mbamEDR.exe"
 
-    $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
+    $mbamArgs = "/quiet GROUP=$installGroup"
 
     Write-Host "Installing $installPath with $mbamArgs"
 
-    Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
+    Start-Process -FilePath $installPath -ArgumentList $mbamArgs -Wait
 
     Start-Sleep -Seconds 30
 
