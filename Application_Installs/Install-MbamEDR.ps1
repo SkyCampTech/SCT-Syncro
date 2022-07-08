@@ -18,19 +18,23 @@ if ($manualGroup) {
 }
 
 #check for services - can build this out a little more if needed to check them independently
-if (!((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent"))) {
+if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
+    Write-Host "Services already installed; exiting"
+    exit
+}
+else {
     Write-Host "Services not found; proceeding with install"
 
     #define variables
-    $installPath = "c:\tools\mbamEDR.exe"
+    $installPath = "c:\tools\mbamEDR.msi"
 
-    $mbamArgs = "/quiet GROUP=$installGroup"
+    $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
 
     Write-Host "Installing $installPath with $mbamArgs"
 
-    Start-Process -FilePath $installPath -ArgumentList $mbamArgs -Wait
+    Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
 
-    Start-Sleep -Seconds 30
+    Start-Sleep -Seconds 60
 
     #check if services exist now
     if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
@@ -47,8 +51,4 @@ if (!((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent
         exit 1
     }
 
-}
-else {
-    Write-Host "One of the services is already installed; investigate"
-    exit 1
 }
