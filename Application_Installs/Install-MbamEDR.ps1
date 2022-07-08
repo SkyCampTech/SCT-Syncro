@@ -34,7 +34,7 @@ else {
 
     Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
 
-    Start-Sleep -Seconds 60
+    Start-Sleep -Seconds 120
 
     #check if services exist now
     if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
