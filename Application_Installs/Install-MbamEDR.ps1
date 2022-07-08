@@ -35,6 +35,7 @@ if (!((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent
     #check if services exist now
     if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
         Write-Host "MBAM Services detected"
+        Log-Activity -Message "MBAM Installed Successfully"
 
         #remove installer?
         Remove-Item -Path $installPath -Confirm:$false
