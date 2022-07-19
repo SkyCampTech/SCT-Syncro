@@ -20,8 +20,8 @@ if ($manualGroup) {
 
 #check for services - can build this out a little more if needed to check them independently
 try {
-    Write-Host "Checking for MBAMervice"
-    if (Get-Service -Name "MBAMervice" -ErrorAction Stop) {
+    Write-Host "Checking for MBAMService"
+    if (Get-Service -Name "MBAMService" -ErrorAction Stop) {
         Write-Host "MBAMService already found; indicates Malwarebytes EDR may already be installed; investigate"
         Rmm-Alert -Category "MBAM EDR" -Message "MBAM EDR Service detected on $env:ComputerName. Not installing"
         exit 1
