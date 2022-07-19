@@ -44,7 +44,7 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
 
         $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
 
-        Write-Host "Installing $installPath with $mbamArgs"
+        Write-Host "Installing using msiexec with arguments: $mbamArgs"
 
         Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
 
