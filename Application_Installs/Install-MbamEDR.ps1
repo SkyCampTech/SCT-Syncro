@@ -1,4 +1,5 @@
 #built based on request from Syncro FB group: https://www.facebook.com/groups/syncromspusers/posts/1461289441009695/
+#MBAM documentation: https://service.malwarebytes.com/hc/en-us/articles/4413802291603
 <#Assumptions:
 -$customerGroup is a Custom Customer Field
 -$manualGroup is provided at runtime if you wish to override the Customer's Group ID
@@ -18,37 +19,36 @@ if ($manualGroup) {
 }
 
 #check for services - can build this out a little more if needed to check them independently
-if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
-    Write-Host "Services already installed; exiting"
-    exit
-}
-else {
-    Write-Host "Services not found; proceeding with install"
-
-    #define variables
-    $installPath = "c:\tools\mbamEDR.msi"
-
-    $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
-
-    Write-Host "Installing $installPath with $mbamArgs"
-
-    Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
-
-    Start-Sleep -Seconds 120
-
-    #check if services exist now
-    if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
-        Write-Host "MBAM Services detected"
-        Log-Activity -Message "MBAM Installed Successfully"
-
-        #remove installer?
-        Remove-Item -Path $installPath -Confirm:$false
-
-        exit
-    }
-    else {
-        Write-Host "Services still not found; investigate"
+try {
+    Write-Host "Checking for MBAMervice"
+    if (Get-Service -Name "MBAMervice" -ErrorAction Stop) {
+        Write-Host "MBAMService already found; indicates Malwarebytes EDR may already be installed; investigate"
+        Rmm-Alert -Category "MBAM EDR" -Message "MBAM EDR Service detected on $env:ComputerName. Not installing"
         exit 1
     }
+}
+catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
+    try {
+        Write-Host "Checking for MBEndpointAgent"
+        if (Get-Service -Name "MBEndpointAgent" -ErrorAction Stop) {
+            Write-Host "MBEndpointAgent already found; indicates there may be a competing Malwarebytes application installed; investigate"
+            Rmm-Alert -Category "MBAM EDR" -Message "MBEndpointAgent already found on $envComputerName; indicates there may be a competing Malwarebytes application installed; investigate"
+            exit 1
+        }
+    }
+    catch {
+        Write-Host "Services not found; proceeding with install"
 
+        #define variables
+        $installPath = "c:\tools\mbamEDR.msi"
+
+        $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
+
+        Write-Host "Installing $installPath with $mbamArgs"
+
+        Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
+
+        Write-Host "Check in a little bit to see if it's installed"
+
+    }
 }
