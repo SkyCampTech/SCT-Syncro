@@ -3,7 +3,7 @@
 <#Assumptions:
 -$customerGroup is a Custom Customer Field
 -$manualGroup is provided at runtime if you wish to override the Customer's Group ID
--installer is .exe and provided as a required file in the syncro script and will be saved under c:\tools; adjust accordingly
+-installer is .msi and provided as a required file in the syncro script and will be saved under c:\tools; adjust accordingly
 #>
 Import-Module $env:SyncroModule
 
