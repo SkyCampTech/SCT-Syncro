@@ -9,9 +9,13 @@ since it means the backup didn't run for some reason.
 
 We may also add checks for event ID 191, too, just for completeness, but event id 190 gets us by for now
 
-After initial run, found that older versions of Veeam used "Veeam Endpoint Backup" for LogName/Source instead of "Veeam Agent" and upgrading still references old log.
-Need to check for both
+#checks to see if the "Ignore Veeam Status" Asset Custom Field (as a platform variable) is yes and exits
 #>
+
+if ($ignoreVeeam -eq "yes") {
+    Write-Host "We are not monitoring Veeam on this machine; exit"
+    exit
+}
 
 #determine which Log/Source to use
 
