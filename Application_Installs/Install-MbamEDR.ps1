@@ -23,7 +23,7 @@ try {
     Write-Host "Checking for MBAMService"
     if (Get-Service -Name "MBAMService" -ErrorAction Stop) {
         Write-Host "MBAMService already found; indicates Malwarebytes EDR may already be installed; investigate"
-        Rmm-Alert -Category "MBAM EDR" -Message "MBAM EDR Service detected on $env:ComputerName. Not installing"
+        Rmm-Alert -Category "MBAM EDR" -Body "MBAM EDR Service detected on $env:ComputerName. Not installing"
         exit 1
     }
 }
@@ -32,7 +32,7 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
         Write-Host "Checking for MBEndpointAgent"
         if (Get-Service -Name "MBEndpointAgent" -ErrorAction Stop) {
             Write-Host "MBEndpointAgent already found; indicates there may be a competing Malwarebytes application installed; investigate"
-            Rmm-Alert -Category "MBAM EDR" -Message "MBEndpointAgent already found on $envComputerName; indicates there may be a competing Malwarebytes application installed; investigate"
+            Rmm-Alert -Category "MBAM EDR" -Body "MBEndpointAgent already found on $envComputerName; indicates there may be a competing Malwarebytes application installed; investigate"
             exit 1
         }
     }
