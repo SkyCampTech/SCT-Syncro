@@ -50,7 +50,7 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
 
         for ($i = 0; $i -lt 3; $i++) {
             Start-Sleep -Seconds 30
-            if (Get-Service -Name "MBAMService" -or Get-Service -Name "MBEndpointAgent") {
+            if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
                 Write-Host "MBAMService found after install."
                 log-activity -Message "MBAM EDR Service detected on $env:ComputerName. Successfully Installed"
                 exit 0
