@@ -42,7 +42,7 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
         #define variables
         $installPath = "c:\tools\mbamEDR.msi"
 
-        $mbamArgs = "/i $installPath /quiet GROUP=$installGroup"
+        $mbamArgs = "/i $installPath /quiet NEBULA_ACCOUNTTOKEN=$installGroup"
 
         Write-Host "Installing using msiexec with arguments: $mbamArgs"
 
