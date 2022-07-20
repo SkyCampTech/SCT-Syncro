@@ -48,14 +48,29 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
 
         Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
 
-        for ($i = 0; $i -lt 3; $i++) {
-            Start-Sleep -Seconds 30
-            if ((Get-Service -Name "MBAMService") -and (Get-Service -Name "MBEndpointAgent")) {
-                Write-Host "MBAMService found after install."
-                log-activity -Message "MBAM EDR Service detected on $env:ComputerName. Successfully Installed"
+        Write-Host "Sleeping for 30 seconds to verify install"
+        Start-Sleep -Seconds 30
+
+        try {
+            Write-Host "Checking for MBEndpointAgent"
+            if (Get-Service -Name "MBEndpointAgent" -ErrorAction Stop) {
+                Write-Host "MBEndpointAgent Found; installed successfully"
+                Log-Activity -Message "Installed MBAM EDR"
                 exit 0
             }
         }
-        Write-Host "Couldn't verify installation. Check for installation manually."
+        catch {
+            Write-Host "MBAMService not yet found. Let's wait another 60 seconds and check again"
+            Start-Sleep -Seconds 60
+            if (Get-Service -Name "MBEndpointAgent") {
+                Write-Host "MBAMService Found; installed successfully"
+                exit 0
+            }
+            else {
+                Write-Host "MBEndpointAgent not found after 90 seconds; install probably failed"
+                RMM-Alert -Category "MBAM EDR" -Body "MBEndpointAgent not found after 90 seconds; install probably failed"
+                exit 1
+            }
+        }
     }
 }
