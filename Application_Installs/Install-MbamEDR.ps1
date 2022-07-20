@@ -48,7 +48,14 @@ catch [Microsoft.PowerShell.Commands.ServiceCommandException] {
 
         Start-Process -FilePath "C:\Windows\system32\msiexec.exe" -ArgumentList $mbamArgs -Wait
 
-        Write-Host "Check in a little bit to see if it's installed"
-
+        for ($i = 0; $i -lt 3; $i++) {
+            Start-Sleep -Seconds 30
+            if (Get-Service -Name "MBAMService" -or Get-Service -Name "MBEndpointAgent") {
+                Write-Host "MBAMService found after install."
+                log-activity -Message "MBAM EDR Service detected on $env:ComputerName. Successfully Installed"
+                exit 0
+            }
+        }
+        Write-Host "Couldn't verify installation. Check for installation manually."
     }
 }
