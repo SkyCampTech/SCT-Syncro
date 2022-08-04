@@ -21,7 +21,7 @@ $pdfProgIds = @{
     "Chrome"      = "ChromePDF"
     "Edge"        = "MSEdgePDF"
     "AdobeReader" = "AcroExch.Document.DC"
-    "Foxit PDF"   = "FoxitPhantomPDF.Document"
+    "Foxit PDF"   = "FoxitPhantomPDF.CCPDFDoc"
 }
 
 $mailProgIds = @{
