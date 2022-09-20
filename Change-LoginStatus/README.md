@@ -1,4 +1,4 @@
-You'll need the ntright.exe file found on the Windows Server 2003 Resource Kit Tools. We found it on the Internet Archive: https://web.archive.org/web/20200804140756/https://www.microsoft.com/en-us/download/details.aspx?id=17657. This file can be used with other scripts to change settings. More documentation here: https://ss64.com/nt/ntrights.html
+You'll need the ntrights.exe file found on the Windows Server 2003 Resource Kit Tools. We found it on the Internet Archive: https://web.archive.org/web/20200804140756/https://www.microsoft.com/en-us/download/details.aspx?id=17657. This file can be used with other scripts to change settings. More documentation here: https://ss64.com/nt/ntrights.html
 
 Use this script to Enable or Disable a login on a machine. You can pass usernames as:
 * _username_
