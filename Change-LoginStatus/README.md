@@ -7,11 +7,11 @@ Use this script to Enable or Disable a login on a machine. You can pass username
 
 In Syncro, you'll need three fields:
 * loginStatus (Dropdown - set default based on your preference)
-1. Disabled
-2. Enabled
+    * Disabled
+    * Enabled
 * username (text field where you enter the username, including DOMAIN\ or AzureAD\ )
 * reboot (Dropdown - set default based on your preference)
-1. yes
-2. no
+    * yes
+    * no
 
 We use this to quickly enable or disable a user that might have some issues but we aren't ready to wipe the machine or remove a TPM key protector
