@@ -31,6 +31,8 @@ try {
     $downloadedVersion = (Get-Item $installerPath).VersionInfo.ProductVersion
 
     if ($installedVersion -ne $downloadedVersion) {
+        Write-Host "Installed Version: $installedVersion"
+        Write-Host "Latest Version: $downloadedVersion"
         Write-Host "Installed version is not latest version; update it"
         Install-SplashtopStreamer
     }
