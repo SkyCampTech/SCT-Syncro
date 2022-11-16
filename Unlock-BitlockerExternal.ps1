@@ -1,11 +1,19 @@
+Import-Module $env:SyncroModule
+
 #use this script to unlock bitlocker on an external drive
 #can be part of a remediation when Veeam backups fail because the drive is locked (after a reboot)
 #this script doesn't work as-is because you're an idiot and you can't pull the recovery key of a locked volume
 #committing to come back to later, but need the key to be an asset custom field, or pull from Hudu
 
-$dataDrive = (Get-BitLockerVolume | Where-Object { $_.VolumeType -eq "Data" }).MountPoint
+#use syncro input for dataDrive and dataKey for now. values are in Hudu
 
-$dataKey = (Get-BitLockerVolume -MountPoint $dataDrive).KeyProtector.RecoveryPassword
+#$dataDrive = (Get-BitLockerVolume | Where-Object { $_.VolumeType -eq "Data" }).MountPoint
+
+#$dataKey = (Get-BitLockerVolume -MountPoint $dataDrive).KeyProtector.RecoveryPassword
+
+if ($dataDrive -notcontains ":") {
+    $dataDrive = $dataDrive + ":"
+}
 
 Unlock-BitLocker -MountPoint $dataDrive -RecoveryPassword $dataKey
 
