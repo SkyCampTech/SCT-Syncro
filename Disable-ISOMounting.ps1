@@ -1,6 +1,8 @@
 #applying based on https://support.huntress.io/hc/en-us/articles/11477430445587-How-to-disable-ISO-mounting
 Import-Module $env:SyncroModule
 
+New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT
+
 $isoMountPath = "HKCR:\Windows.IsoFile\shell\mount"
 $isoMountReg = "ProgrammaticAccessOnly"
 
