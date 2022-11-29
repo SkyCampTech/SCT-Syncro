@@ -20,7 +20,7 @@ function Disable-BrowserPrintPreview {
     try {
         New-ItemProperty -Path $regPath -Name $regName -PropertyType DWORD -Value 1 -Force -ErrorAction Stop
         Write-Host "created $regName under $regPath"
-        Log-Activity -Message "Disabled Browser Print Dialog"
+        Log-Activity -Message "Disabled Browser Print Dialog for $browser"
     }
     catch {
         Write-Host "Unable to create $regName under $regPath"
