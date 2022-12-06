@@ -68,7 +68,7 @@ function Install-LatestFeatureUpdateForcedReboot {
     Write-Host "Installing latest Feature Update with a Forced Reboot"
 
     #inform user
-    Show-UserNotice
+    #Show-UserNotice
 
     #start update
     Install-WindowsUpdate -KBArticleID $kbArticleID -AcceptAll -AutoReboot
@@ -83,7 +83,7 @@ function Install-LatestFeatureUpdateNoReboot {
     )
 
     Write-Host "installing latest Feature Update with No Reboot"
-    Show-UserNotice
+    #Show-UserNotice
     Install-WindowsUpdate -KBArticleID $kbArticleID -AcceptAll -IgnoreReboot
 
     #build this out more to prompt the user at the end to reboot. Look into Burnt Toast Notifications and RunAsUser Module
