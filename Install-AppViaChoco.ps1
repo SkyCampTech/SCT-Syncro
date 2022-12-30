@@ -3,10 +3,17 @@
 #also takes a manual input if your desired app isn't in the dropdown
 #let Service Delivery Team know to add your desired app to the dropdown if you use it regularly
 
+#need to fix "office365business"
+
 Import-Module $env:SyncroModule
 
 #using kabuto patch manager.exe in the syncro folder in case choco alias doesn't exist yet
 $choco = 'C:\Program Files\RepairTech\Syncro\kabuto_app_manager\kabuto_patch_manager.exe'
+
+if (($dropdownApp -eq "office365business") -or ($manualApp -eq "office365business")){
+    Write-Host "Office 365 Business isn't working through choco right now"
+    exit 1
+}
 
 if ($dropdownApp) {
     Start-Process $choco -ArgumentList "install $dropdownApp -y" -Wait
