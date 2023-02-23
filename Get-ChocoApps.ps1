@@ -16,5 +16,7 @@ $apps = Invoke-Expression -Command "choco list --local-only -r --idonly"
 #    $appList += $apps[$i].Split(" ")[0] + "`r`n"
 #}
 
+Write-Output $apps
+
 #save output to Asset Field
 Set-Asset-Field -Name "Choco Apps" -Value $apps
