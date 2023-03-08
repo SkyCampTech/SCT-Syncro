@@ -6,6 +6,7 @@ Import-Module $env:SyncroModule
 $extensionList = @{
     "Windows 10 Account"                    = "ppnbnpeolgkicgegkbkbjmhlideopiji"
     "Microsoft Defender Browser Protection" = "bkbeeeffjjeopflfhgeknacdieedcoml"
+    "Bitwarden"                             = "nngceckbapebfimnlniiiahkandclblb"
 }
 
 #if an extension ID was provided, set that as extension
