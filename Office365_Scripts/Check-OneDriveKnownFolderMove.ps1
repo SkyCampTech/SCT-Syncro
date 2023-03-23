@@ -14,13 +14,13 @@ $Documents = (Get-ItemProperty -path "HKCU:\Software\Microsoft\Windows\CurrentVe
 
 
 #this whole check section doesn't appear to be working properly; commmitting for now, but need to revisit this
-if ($Desktop -notlike "$($ENV:OneDrive)*") { 
+if ($Desktop -notlike "$($ENV:OneDriveCommercial)*") { 
     $KFMDesktop = "Desktop is not set to Onedrive location." 
 }
-if ($Pictures -notlike "$($ENV:OneDrive)*") { 
+if ($Pictures -notlike "$($ENV:OneDriveCommercial)*") { 
     $KFMPictures = "Pictures is not set to Onedrive location." 
 }
-if ($Documents -notlike "$($ENV:OneDrive)*") { 
+if ($Documents -notlike "$($ENV:OneDriveCommercial)*") { 
     $KFMDocuments = "Documents is not set to Onedrive location." 
 }
 
@@ -31,7 +31,7 @@ Desktop: $Desktop
 Pictures: $Pictures
 Documents: $Documents
 
-OneDrive Environment Path: $env:OneDrive
+OneDrive Environment Path: $env:OneDriveCommercial
 "@
 
     Rmm-Alert -Category "Alert" -Body $rmmBody
