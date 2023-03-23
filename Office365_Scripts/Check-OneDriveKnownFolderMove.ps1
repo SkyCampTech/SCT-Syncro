@@ -30,6 +30,8 @@ Known Folder Move not configured for $env:username.
 Desktop: $Desktop
 Pictures: $Pictures
 Documents: $Documents
+
+OneDrive Environment Path: $env:OneDrive
 "@
 
     Rmm-Alert -Category "Alert" -Body $rmmBody
