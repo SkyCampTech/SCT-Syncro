@@ -12,4 +12,6 @@ Set-ItemProperty -Path $setupPath -Name "SetupPhase" -Value 0
 Set-ItemProperty -Path $setupPath -Name "SetupType" -Value 0
 Set-ItemProperty -Path $systemPath -Name "EnableCursorSupression" -Value 0
 
+Log-Activity -Message "Disabled OOBE and rebooting"
+
 Start-Process -FilePath "C:\windows\system32\shutdown.exe" -ArgumentList '/r /f /t 30 /c "This machine will reboot in 30 seconds and will bypass OOBE"'
