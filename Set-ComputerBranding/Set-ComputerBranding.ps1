@@ -6,6 +6,8 @@ Assumptions:
 -Platform Variables correspond to your Customer Custom Fields for: $wallpaper, $lockscreen, $screensaver
 #>
 
+#still need to update to prevent user from changing wallpaper: https://www.makeuseof.com/stop-others-change-windows-desktop-background/ and screensaver: https://www.thewindowsclub.com/prevent-users-changing-screensaver-windows
+
 #folder where files are saved:
 $brandingFolder = "$env:ProgramData\SkyCampTech\bin\Branding"
 
@@ -15,6 +17,7 @@ $userSid = (New-Object System.Security.Principal.NTAccount($currentUser)).Transl
 Write-Host "Setting branding for $currentUser with SID: $userSid"
 $policiesPath = "Registry::HKEY_USERS\$userSid\Software\Microsoft\Windows\CurrentVersion\Policies"
 $systemPath = Join-Path $policiesPath -ChildPath "System"
+
 
 try {
     New-Item -Path $brandingFolder -ItemType Directory -ErrorAction Stop
@@ -77,7 +80,7 @@ function Set-LockScreen {
         New-Item -Path $windowsRegPath -Name "Personalization"
         New-ItemProperty -Path $personalizationPath -Name "LockScreenImage" -Value $lockscreenPath
         New-ItemProperty -Path $personalizationPath -Name "LockScreenOverlaysDisabled" -Value 1
-        New-ItemProperty -Path $personalizationPath -Name "NoChangingLockScreen" -Value 1 -PropertyType DWORD
+        New-ItemProperty -Path $personalizationPath -Name "NoChangingLockScreen" -Value 1 -PropertyType String
     }
     else {
         Write-Host "Personlization already exists"
@@ -95,10 +98,61 @@ function Set-LockScreen {
     }
 }
 
+function Set-Screensaver {
+
+    Get-BrandingAsset -assetType "screensaver"
+    $screensaverPath = (Get-ChildItem -Path $brandingFolder | Where-Object { $_.Name -match "screensaver" }).FullName
+    if (!($timeoutMins)) {
+        $timeoutMins = 10
+    }
+    [int]$timeoutSecs = [convert]::ToInt32($timeoutMins, 10) * 60
+
+    $screensaverRegPath = "Registry::HKEY_USERS\$userSid\Control Panel\Desktop"
+    $timeoutName = "ScreenSaveTimeOut"
+    $timeoutValue = $timeoutSecs
+
+    if (!(Get-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaveActive')) {
+        New-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaveActive' -Value 1 -PropertyType String -Value 1 -Force
+    }
+    else {
+        #enable the screensaver
+        Set-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaveActive' -Value 1 -Force
+    }
+
+    if (!(Get-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaverIsSecure')) {
+        #force Logon on resume
+        New-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaverIsSecure' -PropertyType String -Value 1 -Force
+    }
+    else {
+        Set-ItemProperty -Path $screensaverRegPath -Name 'ScreenSaverIsSecure' -Value 1 -Force
+    }
+
+    if (!(Get-ItemProperty -Path $screensaverRegPath -Name 'SCRNSAVE.exe')) {
+        #set SCRNSAVE.EXE
+        New-ItemProperty -Path $screensaverRegPath -Name 'SCRNSAVE.EXE' -PropertyType String -Value $screensaverPath -Force
+    }
+    else {
+        Set-ItemProperty -Path $screensaverRegPath -Name 'SCRNSAVE.EXE' -Value $screensaverPath -Force
+    }
+
+    if (!(Get-ItemProperty -Path $screensaverRegPath -Name $timeoutName)) {
+        #set timeout
+        New-ItemProperty -path $screensaverRegPath -Name $timeoutName -PropertyType String -Value $timeoutValue -Force
+    }
+    else {
+        #set timeout
+        Set-ItemProperty -path $screensaverRegPath -Name $timeoutName -Value $timeoutValue -Force
+    }
+    
+}
+
 
 if ($wallpaperUrl) {
     Set-Wallpaper
 }
 if ($lockscreenUrl) {
     Set-LockScreen
+}
+if ($screensaverUrl) {
+    Set-Screensaver
 }
