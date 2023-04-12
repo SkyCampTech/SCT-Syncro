@@ -1,5 +1,10 @@
 Import-Module $env:SyncroModule
 
-$securePwd = $pwd | ConvertTo-SecureString -AsPlainText -Force
+if ($username -notcontains "\") {
+    Write-Host "Username didn't include server name; adding server so it will work for Azure AD users"
+    $username = "$server\$username"
+}
 
-Start-Process -filepath "cmdkey.exe" -ArgumentList "/add:$($Server) /user:$($Username) /pass:$($securePwd)"
+Write-Host "Adding credentials for $server for user $username"
+
+Start-Process -filepath "cmdkey.exe" -ArgumentList "/add:$($Server) /user:$($Username) /pass:$($pwd)"
