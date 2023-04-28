@@ -8,6 +8,17 @@ if ($OSCheck -match "Server") {
 
 $keyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
 
+$currentOS = (Get-ComputerInfo).OsName
+
+if ($currentOS -match "10") {
+    Write-Host "Current OS is 10; Set Approved OS to 10"
+    $approvedOS = "Windows 10"
+}
+elseif ($currentOS -match "11") {
+    Write-Host "Current OS is 11; Set Approved OS to 11"
+    $approvedOS = "Windows 11"
+}
+
 #check if WindowsUpdate key exists and create it if not
 
 if (!(Test-Path -Path $keyPath)) {
