@@ -15,6 +15,21 @@ if (($dropdownApp -eq "office365business") -or ($manualApp -eq "office365busines
     exit 1
 }
 #>
+
+if (!(Test-Path $choco)) {
+    $choco = "C:\ProgramData\Chocolatey\choco.exe"
+    
+    if (!(Test-Path $choco)) {
+
+        Write-Host "Chocolatey not installed via Syncro. Installing"
+        $command = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+        Invoke-Expression -Command $command
+    }
+    
+}
+
+Write-Host "Using chocolatey at $choco"
+
 if ($dropdownApp) {
     Start-Process $choco -ArgumentList "install $dropdownApp -y" -Wait
     Log-Activity -Message "Installed $dropdownApp via chocolatey" -EventName "Mgmt"
