@@ -17,12 +17,24 @@ foreach ($app in $appsToRemove) {
     Write-Host "Trying to remove $app"
 
     if (!(Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app })) {
-        Write-Host "$app not installed on this system. Skipping `n"
+        Write-Host "$app not provisioned on this system. Checking to see if it's installed"
+        try {
+            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction Stop
+            Write-Host "Removed $app"
+            $uninstalledApps += $app
+        }
+        catch {
+            Write-Host "$app not installed for any users"
+        }
     }
 
     else {
-
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+        try {
+            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+        }
+        catch {
+            #nothing
+        }
 
         Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app } | Remove-AppxProvisionedPackage -Online
 
@@ -30,6 +42,7 @@ foreach ($app in $appsToRemove) {
     }
 }
 
+Write-Host "`n"
 Write-Host "Uninstalled Apps `n"
 foreach ($app in $uninstalledApps) {
     Write-Host $app
