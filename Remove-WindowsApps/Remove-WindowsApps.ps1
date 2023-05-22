@@ -43,6 +43,8 @@ foreach ($app in $appsToRemove) {
 }
 
 Write-Host "`n"
+Write-Host "==================="
+Write-Host "`n"
 Write-Host "Uninstalled Apps `n"
 foreach ($app in $uninstalledApps) {
     Write-Host $app
