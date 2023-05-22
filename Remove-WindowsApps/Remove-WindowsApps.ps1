@@ -14,6 +14,10 @@ else {
 foreach ($app in $appsToRemove) {
     Write-Host "Trying to remove $app"
 
+    if (!(Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app })) {
+        Write-Host "$app not installed on this system. Skipping"
+    }
+
     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
 
     Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app } | Remove-AppxProvisionedPackage -Online
