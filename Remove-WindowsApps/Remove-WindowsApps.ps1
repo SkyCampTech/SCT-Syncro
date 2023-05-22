@@ -11,14 +11,26 @@ else {
     $appsToRemove = (Invoke-RestMethod -Uri $customerAppRemovalList).Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
 }
 
+$uninstalledApps = @()
+
 foreach ($app in $appsToRemove) {
     Write-Host "Trying to remove $app"
 
     if (!(Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app })) {
-        Write-Host "$app not installed on this system. Skipping"
+        Write-Host "$app not installed on this system. Skipping `n"
     }
 
-    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+    else {
 
-    Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app } | Remove-AppxProvisionedPackage -Online
+        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+
+        Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $app } | Remove-AppxProvisionedPackage -Online
+
+        $uninstalledApps += $app
+    }
+}
+
+Write-Host "Uninstalled Apps `n"
+foreach ($app in $uninstalledApps) {
+    Write-Host $app
 }
