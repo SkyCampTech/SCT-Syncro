@@ -2,32 +2,26 @@
 #https://www.powershellgallery.com/packages/PSWindowsUpdate/2.2.0.3
 Import-Module $env:SyncroModule
 
-#prep work
-#make sure NuGet is installed
-try {
-    $null = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -ErrorAction Stop
-}
-catch {
-    Write-Host "Unable to install NuGet; exiting"
-    exit 1
-}
+if (!(Get-InstalledModule -Name "pswindowsupdate")) {
+    Write-Host "PSWindowsUpdate Module not installed"
+    #prep work
+    #make sure NuGet is installed
+    try {
+        $null = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -ErrorAction Stop
+    }
+    catch {
+        Write-Host "Unable to install NuGet; exiting"
+        exit 1
+    }
 
-#install PSWindowsUpdate Module
-try {
-    Install-Module -Name PSWindowsUpdate -Force -ErrorAction Stop
-}
-catch {
-    Write-Host "Unable to install PSWindowsUpdate Module; exiting"
-    exit 1
-}
-
-#install RunAsUser Module
-try {
-    Install-Module -Name RunAsUser -Force -ErrorAction Stop
-}
-catch {
-    Write-Host "Unable to install RunAsUserModule; exiting"
-    exit 1
+    #install PSWindowsUpdate Module
+    try {
+        Install-Module -Name PSWindowsUpdate -Force -ErrorAction Stop
+    }
+    catch {
+        Write-Host "Unable to install PSWindowsUpdate Module; exiting"
+        exit 1
+    }
 }
 
 function Get-LatestFeatureUpdate {
@@ -35,6 +29,9 @@ function Get-LatestFeatureUpdate {
     $results = Get-WindowsUpdate
 
     $featureUpdateKB = ($results | Where-Object { $_.Title -match "Feature Update" }).KB
+
+    #check for Windows 11 since it no longer includes "Feature Update" in the Title
+    $featureUpdateKB = ($results | Where-Object { $_.Title -match "Windows 11, version" }).KB
 
     if (!($featureUpdateKB)) {
         Write-Host "No Feature Updates needed; exiting"
@@ -44,15 +41,6 @@ function Get-LatestFeatureUpdate {
     Write-Host "Latest Feature Update KB: $featureUpdateKB"
 
     return $featureUpdateKB
-}
-
-function Show-UserNotice {
-    Write-Host "Displaying Notice to User"
-    Invoke-AsCurrentUser -ScriptBlock {
-        $message = "Update In Progress. Please save all open work. Your machine will reboot as soon as the update has finished installing. No further action is necessary. Clicking OK will not reboot your computer."
-        $title = "Message from SkyCamp"
-        $wsh.Popup($message, 0, $title)
-    }
 }
 
 function Install-LatestFeatureUpdateForcedReboot {
@@ -85,8 +73,40 @@ function Install-LatestFeatureUpdateNoReboot {
     Write-Host "installing latest Feature Update with No Reboot"
     #Show-UserNotice
     Install-WindowsUpdate -KBArticleID $kbArticleID -AcceptAll -IgnoreReboot
+    Send-UserRebootNotice
 
     #build this out more to prompt the user at the end to reboot. Look into Burnt Toast Notifications and RunAsUser Module
+}
+
+function Send-UserRebootNotice {
+    $emailBody = @"
+    Hi $userName,
+    <br />
+    <br />
+    We have installed an important update on your computer that requires a restart. Please restart your computer (name: $env:ComputerName) at your earliest convenience. 
+    <br />
+    <br />
+    If you have any questions, please let us know by replying to this email to update the ticket.
+    <br />
+    <br />
+    Thank you, 
+    <br />
+    SkyCamp Tech
+"@
+    $ticketSubject = "$env:ComputerName - Windows Feature Update Notice"
+    $issueType = "Computer - Software"
+    $status = "New"
+
+    $ticket = (Create-Syncro-Ticket -Subject $ticketSubject -IssueType $issueType -Status $status).ticket
+
+    $id = $ticket.id
+
+    Write-Host "Created Ticket with ID $id"
+
+    Create-Syncro-Ticket-Comment -TicketIdOrNumber $id -Subject "Contacted" -Body $emailBody -Hidden "false" -DoNotEmail "false"
+
+    Write-Host "Closing Ticket with ID $id"
+    Update-Syncro-Ticket -TicketIdOrNumber $id -Status "Resolved"
 }
 
 
