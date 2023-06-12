@@ -30,8 +30,11 @@ function Get-LatestFeatureUpdate {
 
     $featureUpdateKB = ($results | Where-Object { $_.Title -match "Feature Update" }).KB
 
-    #check for Windows 11 since it no longer includes "Feature Update" in the Title
-    $featureUpdateKB = ($results | Where-Object { $_.Title -match "Windows 11, version" }).KB
+    if (!$featureUpdateKB) {
+        #check for Windows 11 since it no longer includes "Feature Update" in the Title
+        Write-Host "Didn't find a feature update for Windows 10; check for new naming for Windows 11"
+        $featureUpdateKB = ($results | Where-Object { $_.Title -match "Windows 11, version" }).KB
+    }
 
     if (!($featureUpdateKB)) {
         Write-Host "No Feature Updates needed; exiting"
