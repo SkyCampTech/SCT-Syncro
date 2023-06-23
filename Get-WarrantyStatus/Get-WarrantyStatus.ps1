@@ -43,7 +43,6 @@ function Get-DellWarranty {
         $endDate = ($latest.endDate).Split("T")[0]
         $serviceLevel = $latest.serviceLevelGroup
         $serviceDescription = $latest.serviceLevelDescription
-        $status = if ($endDate -lt $today) { "Expired" } else { $endDate }
 
         Write-Host "Warranty Info for $serviceTag"
         Write-Host "Service Level: $serviceLevel"
@@ -58,6 +57,10 @@ function Get-DellWarranty {
             Default { "Unknown" }
         }
 
+        if ($endDate -lt $today) {
+            $warrantyType = "Expired"
+        }
+
         if ($warrantyType -eq "Unknown") {
             $body = @"
 Unknown Warranty Type
@@ -70,7 +73,7 @@ Update the Get-WarrantyStatus script to include this warranty type and re-run
     }
     
     Set-Asset-Field -Name "Warranty" -Value $warrantyType
-    Set-Asset-Field -Name "WarrantyDate" -Value $status
+    Set-Asset-Field -Name "WarrantyDate" -Value $endDate
         
    
 }
