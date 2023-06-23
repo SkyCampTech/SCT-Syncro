@@ -47,6 +47,7 @@ function Get-DellWarranty {
     $warrantyType = switch ($serviceLevel) {
         5 { "Onsite After Remote Diag" }
         8 { "ProSupport" }
+        11 { "Complete Care" }
         Default { "Unknown" }
     }
 
