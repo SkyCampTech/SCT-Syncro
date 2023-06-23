@@ -26,41 +26,48 @@ function Get-DellWarranty {
     }
 
     $entitlements = $warrantyInfo.entitlements | Where-Object { $_.serviceLevelCode -notin $slcIgnoreList }
-    
+
     $shipDate = ($warrantyInfo.shipDate).Split("T")[0]
     Set-Asset-Field -Name "ShipDate" -Value $shipDate
 
-    #downside to this method is that it's going to pick the latest warranty, even if there's an active ProSupport with a nearer end date
-    $latest = $entitlements | Sort-Object endDate | Select-Object -Last 1
-
-    $endDate = ($latest.endDate).Split("T")[0]
-    $serviceLevel = $latest.serviceLevelGroup
-    $serviceDescription = $latest.serviceLevelDescription
-    $status = if ($endDate -lt $today) { "Expired" } else { $endDate }
-
-    Write-Host "Warranty Info for $serviceTag"
-    Write-Host "Service Level: $serviceLevel"
-    Write-Host "Service Description: $ServiceDescription"
-    Write-Host "Ship Date: $shipDate"
-    Write-Host "End Date: $endDate"
-
-    $warrantyType = switch ($serviceLevel) {
-        5 { "Onsite After Remote Diag" }
-        8 { "ProSupport" }
-        11 { "Complete Care" }
-        Default { "Unknown" }
+    if (!($entitlements)) {
+        #apparently some machines have no warranty
+        $warrantyType = "No Warranty"
+        Write-Host "This machine does not have any warranty entitlements"
     }
+    else {
 
-    if ($warrantyType -eq "Unknown") {
-        $body = @"
+        #downside to this method is that it's going to pick the latest warranty, even if there's an active ProSupport with a nearer end date
+        $latest = $entitlements | Sort-Object endDate | Select-Object -Last 1
+
+        $endDate = ($latest.endDate).Split("T")[0]
+        $serviceLevel = $latest.serviceLevelGroup
+        $serviceDescription = $latest.serviceLevelDescription
+        $status = if ($endDate -lt $today) { "Expired" } else { $endDate }
+
+        Write-Host "Warranty Info for $serviceTag"
+        Write-Host "Service Level: $serviceLevel"
+        Write-Host "Service Description: $ServiceDescription"
+        Write-Host "Ship Date: $shipDate"
+        Write-Host "End Date: $endDate"
+
+        $warrantyType = switch ($serviceLevel) {
+            5 { "Onsite After Remote Diag" }
+            8 { "ProSupport" }
+            11 { "Complete Care" }
+            Default { "Unknown" }
+        }
+
+        if ($warrantyType -eq "Unknown") {
+            $body = @"
 Unknown Warranty Type
 Service Level: $serviceLevel
 Description: $serviceDescription
 Update the Get-WarrantyStatus script to include this warranty type and re-run
 "@
-        Rmm-Alert -Category "Warranty" -Body $body
+            Rmm-Alert -Category "Warranty" -Body $body
+        }
     }
-
     
     Set-Asset-Field -Name "Warranty" -Value $warrantyType
     Set-Asset-Field -Name "WarrantyDate" -Value $status
