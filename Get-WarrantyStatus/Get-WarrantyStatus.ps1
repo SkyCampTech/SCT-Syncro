@@ -5,6 +5,7 @@ Import-Module $env:SyncroModule
 function Get-DellWarranty {
     #this is a list of Service Level Codes that may be returned that are not related to hardware warranties
     #taken from https://github.com/KelvinTegelaar/PowerShellWarrantyReports/blob/master/private/Get-DellWarranty.ps1
+    #added KK since that's the "Keep your Hard Drive" one and was throwing off results
     $slcIgnoreList = @("D", "DL", "PJ", "PR", "KK")
 
     $today = Get-Date -Format yyyy-MM-dd
