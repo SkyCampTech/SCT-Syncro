@@ -29,23 +29,15 @@ if (($uptimeResult -eq $true) -Or ($rebootPendingResult -eq $true)) {
     Write-Host "Posting reboot notice"
 
     #make sure BurntToast Module is installed
-    try {
-        Get-InstalledModule -Name "BurntToast" -ErrorAction Stop
-        Write-Host "Found BurntToast Module"
-    }
-    catch {
-        Write-Host "BurntToast Module not found; installing"
-        Install-Module -Name BurntToast -Confirm:$false
+    if ($NULL -eq (Get-InstalledModule -Name "BurntToast")) {
+        Write-Host "BurntToast not found; installing"
+        Install-Module -Name "BurntToast" -Force -Confirm:$false
     }
 
     #make sure RunAsUser Module is installed
-    try {
-        Get-InstalledModule -Name "RunAsUser" -ErrorAction Stop
-        Write-Host "Found RunAsUser Module"
-    }
-    catch {
+    if ($NULL -eq (Get-InstalledModule -Name "RunAsUser")) {
         Write-Host "RunAsUser Module not found; installing"
-        Install-Module -Name RunAsUser -Confirm:$false
+        Install-Module -Name "RunAsUser" -Force -Confirm:$false
     }
 
 
@@ -69,7 +61,7 @@ if (($uptimeResult -eq $true) -Or ($rebootPendingResult -eq $true)) {
     # Install-module -Name RunAsUser -Confirm:$false
     invoke-ascurrentuser -scriptblock {
 
-        #$heroimage = New-BTImage -Source 'https://skycamptech.com/wp-content/uploads/2015/12/skycamp-logo-header.png' -HeroImage
+        $heroimage = New-BTImage -Source 'https://skycamptech.com/wp-content/uploads/2015/12/skycamp-logo-header.png' -HeroImage
         $Text1 = New-BTText -Content  "Message from Sky Camp"
         $Text2 = New-BTText -Content "Your computer requires a reboot. Please select if you'd like to reboot now, or snooze this message."
         $Button = New-BTButton -Content "Snooze" -snooze -id 'SnoozeTime'
@@ -78,16 +70,19 @@ if (($uptimeResult -eq $true) -Or ($rebootPendingResult -eq $true)) {
         $10Min = New-BTSelectionBoxItem -Id 10 -Content '10 minutes'
         $1Hour = New-BTSelectionBoxItem -Id 60 -Content '1 hour'
         $4Hour = New-BTSelectionBoxItem -Id 240 -Content '4 hours'
+        $8Hour = New-BTSelectionBoxItem -Id 480 -Content '8 hours'
         $1Day = New-BTSelectionBoxItem -Id 1440 -Content '1 day'
-        $Items = $5Min, $10Min, $1Hour, $4Hour, $1Day
+        $Items = $5Min, $10Min, $1Hour, $4Hour, $8Hour, $1Day
         $SelectionBox = New-BTInput -Id 'SnoozeTime' -DefaultSelectionBoxItemId 10 -Items $Items
         $action = New-BTAction -Buttons $Button, $Button2 -inputs $SelectionBox
-        $Binding = New-BTBinding -Children $text1, $text2 #-HeroImage $heroimage
+        $Binding = New-BTBinding -Children $text1, $text2 -HeroImage $heroimage
         $Visual = New-BTVisual -BindingGeneric $Binding
         $Content = New-BTContent -Visual $Visual -Actions $action
         Submit-BTNotification -Content $Content
 
     }
+
+    Log-Activity -Message "Prompted User with Reboot Notification"
 }
 else {
     Write-Host "Reboot Not Required, uptime lower than 30 days; exiting"
