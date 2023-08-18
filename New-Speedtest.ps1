@@ -19,6 +19,8 @@ $downloadMbps = [math]::Round([int]$result.download.bandwidth / 125000, 2)
 $downloadLatency = [math]::Round($result.download.latency.iqm)
 $uploadMbps = [math]::Round([int]$result.upload.bandwidth / 125000, 2)
 $uploadLatency = [math]::Round($result.upload.latency.iqm)
+$isp = $result.isp
+$publicIp = $result.interface.externalIp
 
 
 
@@ -26,9 +28,11 @@ $resultUrl = $result.result.url
 
 Write-Host "Result URL: $resultURL"
 
-Log-Activity -Message "Speedtest Result - $downloadMbps mbps ($downloadLatency ms) / $uploadMbps mbps ($uploadLatency ms)"
+Log-Activity -Message "Speedtest Result - $downloadMbps mbps ($downloadLatency ms) / $uploadMbps mbps ($uploadLatency ms) on $isp with Public IP: $publicIp"
 
 if ($uploadResults -match "yes") {
     Write-Host "Uploading Speedtest Results"
     Upload-File -FilePath $resultFile
 }
+
+Remove-Item $resultFile
