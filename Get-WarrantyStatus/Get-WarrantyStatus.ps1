@@ -2,6 +2,87 @@
 #only checking Dell right now
 Import-Module $env:SyncroModule
 
+function Fix-DateFormat {
+    param(
+        [Parameter()]
+        [string]$fixDate
+    )
+
+    #Write-Host "Received $fixDate"
+   
+    $splitDate = $fixDate.Split("/")
+    $year = $splitDate[2]
+    #Write-Host $year
+    $month = $splitDate[0]
+    #Write-Host $month
+    $day = $splitDate[1]
+    #Write-Host $day
+
+    if ([int]$month -lt 10) {
+        [string]$stringMonth = "0" + $month
+    }
+    else {
+        [string]$stringMonth = $month
+    }
+
+    if ([int]$day -lt 10) {
+        [string]$stringDay = "0" + $day
+    }
+    else {
+        [string]$stringDay = $day
+    }
+
+    $fixedDate = "$year-$stringMonth-$stringDay"
+
+    Write-Host $fixedDate
+
+    return $fixedDate
+
+}
+
+function Get-CarbonSystemsWarranty {
+    $headers = @{
+        "Ocp-Apim-Subscription-Key" = $carbonSystemsKey
+        "Cache-Control"             = "no-cache"
+    }
+
+    $delay = Get-Random -Minimum 12 -Maximum 30
+
+    Write-Host "Sleeping for $delay seconds for Carbon Systems query limit"
+    Start-Sleep -Seconds $delay
+
+    $uri = "https://apim.carbonsys.com/warranty/check?serialNumbers=$serviceTag"
+
+    $result = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+
+    if ($($result.documentType) -match "not found") {
+        $status = "NOT FOUND"
+        $startDate = "1900-01-01"
+        $endDate = "1900-01-01"
+        Rmm-Alert -Category "Warranty" -Body "No warranty found for $env:ComputerName"
+    }
+    else {
+        $endDate = Fix-DateFormat -fixDate $($result.endDate)
+        $startDate = Fix-DateFormat -fixDate $($result.startDate)
+
+        if ($result.status -eq "Active") {
+            $status = $result.description
+        }
+        else {
+            $status = $result.status
+        }
+    }
+
+    Set-Asset-Field -Name "ShipDate" -Value $startDate
+    Set-Asset-Field -Name "Warranty" -Value $status
+    Set-Asset-Field -Name "WarrantyDate" -Value $endDate
+
+    Write-Host "Ship Date: $startDate"
+    Write-Host "End Date: $endDate"
+    Write-Host "Warranty: $status"
+
+}
+
 function Get-DellWarranty {
     #this is a list of Service Level Codes that may be returned that are not related to hardware warranties
     #taken from https://github.com/KelvinTegelaar/PowerShellWarrantyReports/blob/master/private/Get-DellWarranty.ps1
@@ -100,10 +181,14 @@ function Get-DellAccessToken {
     return $accessToken
 }
 
-#exit program if computer is not a Dell
-if ($pcMfg -notmatch "Dell") {
-    Write-Host "Computer is not a Dell; exiting"
+
+if ($pcMfg -match "dell") {
+    Get-DellWarranty
+}
+elseif ($pcMfg -match "Carbon Systems") {
+    Get-CarbonSystemsWarranty
+}
+else {
+    Write-Host "Machine is not a Dell or Carbon Systems computer"
     exit 0
 }
-
-Get-DellWarranty
