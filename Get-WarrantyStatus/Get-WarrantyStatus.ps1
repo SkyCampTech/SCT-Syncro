@@ -14,7 +14,7 @@ if ($today -lt [datetime]$warrantyEnd) {
     exit 0
 }
 
-function Fix-DateFormat {
+function Set-DateFormat {
     param(
         [Parameter()]
         [string]$fixDate
@@ -74,8 +74,8 @@ function Get-CarbonSystemsWarranty {
         Rmm-Alert -Category "Warranty" -Body "No warranty found for $env:ComputerName"
     }
     else {
-        $endDate = Fix-DateFormat -fixDate $($result.endDate)
-        $startDate = Fix-DateFormat -fixDate $($result.startDate)
+        $endDate = Set-DateFormat -fixDate $($result.endDate)
+        $startDate = Set-DateFormat -fixDate $($result.startDate)
 
         if ($result.status -eq "Active") {
             $status = $result.description
