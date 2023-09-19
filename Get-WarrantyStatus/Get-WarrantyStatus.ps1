@@ -2,6 +2,18 @@
 #only checking Dell right now
 Import-Module $env:SyncroModule
 
+if ($warrantyStatus -eq "Expired") {
+    Write-Host "Warranty already expired ($warrantyEnd); exiting"
+    exit 0
+}
+
+[datetime]$today = Get-Date -Format "yyyy-MM-dd"
+
+if ($today -lt [datetime]$warrantyEnd) {
+    Write-Host "Warranty still active ($warrantyEnd); exiting"
+    exit 0
+}
+
 function Fix-DateFormat {
     param(
         [Parameter()]
