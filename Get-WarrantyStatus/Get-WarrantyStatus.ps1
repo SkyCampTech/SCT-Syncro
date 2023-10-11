@@ -194,7 +194,7 @@ function Get-DellAccessToken {
 }
 
 
-if ($pcMfg -match "dell") {
+if ($pcMfg -match "Dell Inc.") {
     Get-DellWarranty
 }
 elseif ($pcMfg -match "Carbon Systems") {
