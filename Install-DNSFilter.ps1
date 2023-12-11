@@ -27,7 +27,6 @@ Start-Sleep -Seconds 30
 
 if (Test-Path $dnsFilterAgent) {
     Write-Host "DNSFilter Agent installed successfully"
-    exit
 }
 else {
     Write-Host "DNSFilter Agent not detected; exiting with Failure"
