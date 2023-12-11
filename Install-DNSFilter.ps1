@@ -37,3 +37,11 @@ else {
 Remove-Item -Path $dnsFilterInstaller -Confirm:$false
 
 #throw an RMM alert that can trigger a notice to user?
+if ((Get-Service -Name "DNSFilter Agent").Status -ne "Running") {
+    Write-Host "DNSFilter Agent Not Running; create RMM alert to trigger Restart notice"
+    Rmm-Alert -Category "Restart" -Body "Restart required. Display alert to user to restart"
+}
+else {
+    Write-Host "DNSFilter Agent installed and running"
+    exit
+}
