@@ -14,7 +14,7 @@ function Display-SyncroBroadcast {
 }
 
 $messages = @{
-    "Restart" = "Due to recent updates, your computer needs to be restarted. Please save any open work and restart your computer when it's convenient for you. `n`nThis is just an alert, and clicking OK below will not restart your computer automatically.`n`nThank you,`nSkyCamp Tech`nsupport@skycamptech.com"
+    "Restart" = "In order to keep your system healthy and secure, it needs to be restarted. Please save your work and restart as soon as possible. `n`nThis is just an alert, and clicking OK below will not restart your computer automatically.`n`nThank you,`nSkyCamp Tech`nsupport@skycamptech.com"
     "custom"  = $customMessage
 }
 
