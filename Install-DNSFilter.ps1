@@ -7,6 +7,11 @@ if (!($siteSecretKey)) {
     exit 1
 }
 
+if ($ignoreDNSFilter -eq "yes") {
+    Write-Host "DNSFilter set to Ignore for this device; exiting"
+    exit
+}
+
 $dnsFilterInstaller = "C:\ProgramData\SkyCampTech\temp\DNSFilter_Agent_Setup.msi"
 $dnsFilterAgent = "C:\Program Files\DNSFilter Agent\DNSFilter Agent.exe"
 
