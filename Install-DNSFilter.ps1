@@ -47,5 +47,8 @@ if ((Get-Service -Name "DNSFilter Agent").Status -ne "Running") {
 }
 else {
     Write-Host "DNSFilter Agent installed and running"
+    $ticket = (Create-Syncro-Ticket -Subject "New DNSFilter Install - $env:ComputerName" -IssueType "Computer - Software"-Status "New").ticket.id
+    Create-Syncro-Ticket-Comment -TicketIdOrNumber $ticket -Subject "Update" -Body "Check DNSFilter to see if $env:ComputerName needs to be approved" -Hidde "false" -DoNotEmail "true"
+
     exit
 }
