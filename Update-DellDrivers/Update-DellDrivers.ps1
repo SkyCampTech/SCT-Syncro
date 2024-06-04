@@ -36,6 +36,7 @@ function Install-DellDrivers {
     if ($rebootPC -match "yes") {
         Write-Host "Installing drivers and forcing reboot"
         Start-Process $dcu -ArgumentList "/applyUpdates -reboot=enable -forceUpdate=enable -outputLog=c:\Temp\dcuInstall_$today.log" -Wait
+        Write-Host "Finished Applying updates at $(Get-Date)"
     }
     else {
         Write-Host "Installing drivers with no reboot"
