@@ -1,5 +1,5 @@
 #use this script to get a computer's warranty status
-#only checking Dell right now
+#checks Dell, Carbon Systems, Griffin
 Import-Module $env:SyncroModule
 
 if ($warrantyStatus -eq "Expired") {
@@ -11,7 +11,7 @@ if ($warrantyStatus -eq "Expired") {
 
 if ($today -lt [datetime]$warrantyEnd) {
     Write-Host "Warranty still active ($warrantyEnd); exiting"
-    exit 0
+    #exit 0
 }
 
 function Set-DateFormat {
@@ -50,6 +50,21 @@ function Set-DateFormat {
 
     return $fixedDate
 
+}
+
+function Get-GriffinWarranty {
+    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $griffinUsername, $griffinPassword)))
+
+    $result = Invoke-RestMethod -Uri " https://pupapigriffincloud.azurewebsites.net/PupAPI/api/Inventory/GetWarrantyExpirationByST?OrgID=1&ServiceTagNumber=$serviceTag" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo) }
+
+    if ($result) {
+        Write-Host "Found warranty in Griffin"
+        $endDate = Set-DateFormat -fixDate $result
+        Set-Asset-Field -Name "WarrantyDate" -Value $endDate
+        Set-Asset-Field -Name "Warranty" -Value "Griffin 3YR"
+        exit
+    }
+    Write-Host "Device not found in Griffin; continuing"
 }
 
 function Get-CarbonSystemsWarranty {
@@ -193,6 +208,8 @@ function Get-DellAccessToken {
     return $accessToken
 }
 
+#try Griffin first
+Get-GriffinWarranty
 
 if ($pcMfg -match "Dell Inc.") {
     Get-DellWarranty
