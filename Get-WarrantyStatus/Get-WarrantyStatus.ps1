@@ -9,10 +9,11 @@ if ($warrantyStatus -eq "Expired") {
 
 [datetime]$today = Get-Date -Format "yyyy-MM-dd"
 
-if ($today -lt [datetime]$warrantyEnd) {
-    Write-Host "Warranty still active ($warrantyEnd); exiting"
-    #exit 0
-}
+
+#if ($today -lt [datetime]$warrantyEnd) {
+#    Write-Host "Warranty still active ($warrantyEnd); exiting"
+#exit 0
+#}
 
 function Set-DateFormat {
     param(
@@ -20,7 +21,7 @@ function Set-DateFormat {
         [string]$fixDate
     )
 
-    #Write-Host "Received $fixDate"
+    Write-Host "Received $fixDate"
    
     $splitDate = $fixDate.Split("/")
     $year = $splitDate[2]
@@ -30,19 +31,20 @@ function Set-DateFormat {
     $day = $splitDate[1]
     #Write-Host $day
 
-    if ([int]$month -lt 10) {
-        [string]$stringMonth = "0" + $month
+    if ($month -match '^0\d$' -or [int]$month -lt 10) {
+        [string]$stringMonth = $month.PadLeft(2, '0')
     }
     else {
         [string]$stringMonth = $month
     }
-
-    if ([int]$day -lt 10) {
-        [string]$stringDay = "0" + $day
+    
+    if ($day -match '^0\d$' -or [int]$day -lt 10) {
+        [string]$stringDay = $day.PadLeft(2, '0')
     }
     else {
         [string]$stringDay = $day
     }
+    
 
     $fixedDate = "$year-$stringMonth-$stringDay"
 
@@ -55,10 +57,10 @@ function Set-DateFormat {
 function Get-GriffinWarranty {
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $griffinUsername, $griffinPassword)))
 
-    $result = Invoke-RestMethod -Uri " https://pupapigriffincloud.azurewebsites.net/PupAPI/api/Inventory/GetWarrantyExpirationByST?OrgID=1&ServiceTagNumber=$serviceTag" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo) }
+    $result = (Invoke-RestMethod -Uri " https://pupapigriffincloud.azurewebsites.net/PupAPI/api/Inventory/GetWarrantyExpirationByST?OrgID=1&ServiceTagNumber=$serviceTag" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo) }).ItemWarrantyExpireDate
 
     if ($result) {
-        Write-Host "Found warranty in Griffin"
+        Write-Host "Found warranty in Griffin: $result"
         $endDate = Set-DateFormat -fixDate $result
         Set-Asset-Field -Name "WarrantyDate" -Value $endDate
         Set-Asset-Field -Name "Warranty" -Value "Griffin 3YR"
