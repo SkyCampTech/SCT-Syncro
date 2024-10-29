@@ -10,10 +10,10 @@ if ($warrantyStatus -eq "Expired") {
 [datetime]$today = Get-Date -Format "yyyy-MM-dd"
 
 
-#if ($today -lt [datetime]$warrantyEnd) {
-#    Write-Host "Warranty still active ($warrantyEnd); exiting"
-#exit 0
-#}
+if ($today -lt [datetime]$warrantyEnd) {
+    Write-Host "Warranty still active ($warrantyEnd); exiting"
+    exit 0
+}
 
 function Set-DateFormat {
     param(
