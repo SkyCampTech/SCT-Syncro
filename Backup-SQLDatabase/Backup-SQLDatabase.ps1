@@ -10,6 +10,16 @@ function Remove-OldBackups {
 
 }
 
+function Get-BackupFile {
+    If (Test-Path $outputFile) {
+        Write-Host "Backup saved successfully at $outputFile"
+    }
+    else {
+        RMM-Alert -Category "Backups" -AlertBody "SQL Database Backup not found at $outputFile; investigate"
+        exit 1
+    }
+}
+
 #convert the provided password from Syncro runtime to a secure string
 $securePassword = ConvertTo-SecureString -AsPlainText $sqlPassword -Force
 
@@ -21,6 +31,10 @@ $sqlCredentials = New-Object System.Management.Automation.PSCredential ($sqlUser
 $outputFile = $outputPath + "\" + $databaseName + "_" + $date + ".bak"
 
 Backup-SqlDatabase -ServerInstance $serverInstance -Database $databaseName -BackupFile $outputFile -Credential $sqlCredentials
+
+Start-Sleep -Seconds 10
+
+Get-BackupFile
 
 if ($purgeBackups -match "yes") {
     Remove-OldBackups -purgeAge $purgeAge
