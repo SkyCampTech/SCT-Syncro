@@ -2,6 +2,28 @@
 #checks Dell, Carbon Systems, Griffin
 Import-Module $env:SyncroModule
 
+function Check-SyncroWarranty {
+    Write-Host "Checking Syncro's Warranty Status"
+    if($syncroWarrantyEndDate -match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$'){
+    Write-Host "Syncro Warranty End Date: $syncroWarrantyEndDate"
+}
+else {
+    Write-Host "Syncro's Warranty Lookup is unable to determine the warranty for this device"
+    $ticketId = (Create-Syncro-Ticket -Subject "$env:ComputerName - Update Warranty Status" -IssueType "Other" -Status "New").ticket.id
+    $ticketBody = @"
+    Review the warranty for $env:ComputerName and update the Start and End Date by hitting Edit on the Asset: https://screenshots.skycamptech.com/i/5acd3d2a-ff72-43d9-8ee2-82405978afb3.png
+
+    Start Date: $warrantyStart
+    End Date: $warrantyEnd
+"@
+    Create-Syncro-Ticket-Comment -TicketIdOrNumber $ticketId -Subject "Updated" -Body $ticketBody -Hidden "false" -DoNotEmail "true"
+    
+}
+}
+
+#see if Syncro Warranty isn't set
+Check-SyncroWarranty
+
 if ($warrantyStatus -eq "Expired") {
     Write-Host "Warranty already expired ($warrantyEnd); exiting"
     exit 0
@@ -14,6 +36,8 @@ if ($today -lt [datetime]$warrantyEnd) {
     Write-Host "Warranty still active ($warrantyEnd); exiting"
     exit 0
 }
+
+
 
 function Set-DateFormat {
     param(
