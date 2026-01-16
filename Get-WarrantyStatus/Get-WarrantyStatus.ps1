@@ -13,6 +13,9 @@ else {
     $ticketBody = @"
     Review the warranty for $env:ComputerName and update the Start and End Date by hitting Edit on the Asset: https://screenshots.skycamptech.com/i/5acd3d2a-ff72-43d9-8ee2-82405978afb3.png
 
+    Manufacturer: $pcMfg
+    Serial: $serviceTag
+
     Start Date: $warrantyStart
     End Date: $warrantyEnd
 "@
